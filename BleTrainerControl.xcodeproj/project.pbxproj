@@ -7,41 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		833BF7BD21F7BAC900689E66 /* BleTrainerControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */; };
+		833BF7C921F7BFC300689E66 /* FECMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7C821F7BFC300689E66 /* FECMessage.swift */; };
+		833BF7CB21F7C0B800689E66 /* FECMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */; };
+		833BF7CC21F7C0E900689E66 /* FECMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7C821F7BFC300689E66 /* FECMessage.swift */; };
 		C78700841BB2D68C007BC635 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700831BB2D68C007BC635 /* main.m */; };
 		C78700871BB2D68C007BC635 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700861BB2D68C007BC635 /* AppDelegate.m */; };
 		C78700901BB2D68C007BC635 /* BleTrainerControl.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C787008E1BB2D68C007BC635 /* BleTrainerControl.xcdatamodeld */; };
 		C78700921BB2D68C007BC635 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C78700911BB2D68C007BC635 /* Assets.xcassets */; };
 		C78700951BB2D68C007BC635 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C78700931BB2D68C007BC635 /* LaunchScreen.storyboard */; };
-		C78700BF1BB2D6EC007BC635 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700B91BB2D6EC007BC635 /* ViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C78700C01BB2D6EC007BC635 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C78700BA1BB2D6EC007BC635 /* ViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C78700C11BB2D6EC007BC635 /* ConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700BC1BB2D6EC007BC635 /* ConnectionViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C78700C21BB2D6EC007BC635 /* ConnectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C78700BD1BB2D6EC007BC635 /* ConnectionViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C78700C31BB2D6EC007BC635 /* ConnectionViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = C78700BE1BB2D6EC007BC635 /* ConnectionViewController_iPhone.xib */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACD11BB2D79F0002EB58 /* SpinDownCalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACCF1BB2D79F0002EB58 /* SpinDownCalibrationViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACD21BB2D79F0002EB58 /* SpinDownCalibrationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACD01BB2D79F0002EB58 /* SpinDownCalibrationViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACD61BB2D7A60002EB58 /* BasicResistanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACD41BB2D7A60002EB58 /* BasicResistanceViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACD71BB2D7A60002EB58 /* BasicResistanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACD51BB2D7A60002EB58 /* BasicResistanceViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACDB1BB2D7AD0002EB58 /* TargetPowerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACD91BB2D7AD0002EB58 /* TargetPowerViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACDC1BB2D7AD0002EB58 /* TargetPowerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACDA1BB2D7AD0002EB58 /* TargetPowerViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACE01BB2D7B30002EB58 /* WindResistanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACDE1BB2D7B30002EB58 /* WindResistanceViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACE11BB2D7B30002EB58 /* WindResistanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACDF1BB2D7B30002EB58 /* WindResistanceViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACE51BB2D7C00002EB58 /* TrackResistanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACE31BB2D7C00002EB58 /* TrackResistanceViewController.m */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACE61BB2D7C00002EB58 /* TrackResistanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACE41BB2D7C00002EB58 /* TrackResistanceViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACEB1BB2D7DE0002EB58 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACEA1BB2D7DE0002EB58 /* Utils.m */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACEE1BB2D7EB0002EB58 /* BTLEManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACED1BB2D7EB0002EB58 /* BTLEManager.m */; settings = {ASSET_TAGS = (); }; };
-		C7D6ACF41BB2D84C0002EB58 /* BTLETrainerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACF31BB2D84C0002EB58 /* BTLETrainerManager.m */; settings = {ASSET_TAGS = (); }; };
+		C78700BF1BB2D6EC007BC635 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700B91BB2D6EC007BC635 /* ViewController.m */; };
+		C78700C01BB2D6EC007BC635 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C78700BA1BB2D6EC007BC635 /* ViewController.xib */; };
+		C78700C11BB2D6EC007BC635 /* ConnectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700BC1BB2D6EC007BC635 /* ConnectionViewController.m */; };
+		C78700C21BB2D6EC007BC635 /* ConnectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C78700BD1BB2D6EC007BC635 /* ConnectionViewController.xib */; };
+		C78700C31BB2D6EC007BC635 /* ConnectionViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = C78700BE1BB2D6EC007BC635 /* ConnectionViewController_iPhone.xib */; };
+		C7D6ACD11BB2D79F0002EB58 /* SpinDownCalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACCF1BB2D79F0002EB58 /* SpinDownCalibrationViewController.m */; };
+		C7D6ACD21BB2D79F0002EB58 /* SpinDownCalibrationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACD01BB2D79F0002EB58 /* SpinDownCalibrationViewController.xib */; };
+		C7D6ACD61BB2D7A60002EB58 /* BasicResistanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACD41BB2D7A60002EB58 /* BasicResistanceViewController.m */; };
+		C7D6ACD71BB2D7A60002EB58 /* BasicResistanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACD51BB2D7A60002EB58 /* BasicResistanceViewController.xib */; };
+		C7D6ACDB1BB2D7AD0002EB58 /* TargetPowerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACD91BB2D7AD0002EB58 /* TargetPowerViewController.m */; };
+		C7D6ACDC1BB2D7AD0002EB58 /* TargetPowerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACDA1BB2D7AD0002EB58 /* TargetPowerViewController.xib */; };
+		C7D6ACE01BB2D7B30002EB58 /* WindResistanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACDE1BB2D7B30002EB58 /* WindResistanceViewController.m */; };
+		C7D6ACE11BB2D7B30002EB58 /* WindResistanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACDF1BB2D7B30002EB58 /* WindResistanceViewController.xib */; };
+		C7D6ACE51BB2D7C00002EB58 /* TrackResistanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACE31BB2D7C00002EB58 /* TrackResistanceViewController.m */; };
+		C7D6ACE61BB2D7C00002EB58 /* TrackResistanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C7D6ACE41BB2D7C00002EB58 /* TrackResistanceViewController.xib */; };
+		C7D6ACEB1BB2D7DE0002EB58 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACEA1BB2D7DE0002EB58 /* Utils.m */; };
+		C7D6ACEE1BB2D7EB0002EB58 /* BTLEManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACED1BB2D7EB0002EB58 /* BTLEManager.m */; };
+		C7D6ACF41BB2D84C0002EB58 /* BTLETrainerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D6ACF31BB2D84C0002EB58 /* BTLETrainerManager.m */; };
 		C7D6ACF61BB2DB3F0002EB58 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7D6ACF51BB2DB3F0002EB58 /* CoreBluetooth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C787009C1BB2D68C007BC635 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C78700771BB2D68C007BC635 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C787007E1BB2D68C007BC635;
-			remoteInfo = BleTrainerControl;
-		};
-		C78700A71BB2D68D007BC635 /* PBXContainerItemProxy */ = {
+		833BF7BF21F7BAC900689E66 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C78700771BB2D68C007BC635 /* Project object */;
 			proxyType = 1;
@@ -51,6 +48,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		833BF7BA21F7BAC900689E66 /* BleTrainerControlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BleTrainerControlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleTrainerControlTests.swift; sourceTree = "<group>"; };
+		833BF7BE21F7BAC900689E66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		833BF7C421F7BB2600689E66 /* BleTrainerControl-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BleTrainerControl-Bridging-Header.h"; sourceTree = "<group>"; };
+		833BF7C521F7BB8800689E66 /* BleTrainerControlTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BleTrainerControlTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		833BF7C721F7BFC300689E66 /* BleTrainerControl-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BleTrainerControl-Bridging-Header.h"; sourceTree = "<group>"; };
+		833BF7C821F7BFC300689E66 /* FECMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FECMessage.swift; sourceTree = "<group>"; };
+		833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FECMessageTests.swift; sourceTree = "<group>"; };
 		C787007F1BB2D68C007BC635 /* BleTrainerControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BleTrainerControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C78700831BB2D68C007BC635 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C78700851BB2D68C007BC635 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -59,8 +64,6 @@
 		C78700911BB2D68C007BC635 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C78700941BB2D68C007BC635 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C78700961BB2D68C007BC635 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C787009B1BB2D68C007BC635 /* BleTrainerControlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BleTrainerControlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C78700A61BB2D68D007BC635 /* BleTrainerControlUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BleTrainerControlUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C78700B81BB2D6EC007BC635 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		C78700B91BB2D6EC007BC635 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		C78700BA1BB2D6EC007BC635 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
@@ -94,6 +97,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		833BF7B721F7BAC900689E66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C787007C1BB2D68C007BC635 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -102,28 +112,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C78700981BB2D68C007BC635 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C78700A31BB2D68D007BC635 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		833BF7BB21F7BAC900689E66 /* BleTrainerControlTests */ = {
+			isa = PBXGroup;
+			children = (
+				833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */,
+				833BF7BE21F7BAC900689E66 /* Info.plist */,
+				833BF7C521F7BB8800689E66 /* BleTrainerControlTests-Bridging-Header.h */,
+				833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */,
+			);
+			path = BleTrainerControlTests;
+			sourceTree = "<group>";
+		};
+		833BF7C621F7BF8E00689E66 /* SwiftBleTrainerControl */ = {
+			isa = PBXGroup;
+			children = (
+				833BF7C821F7BFC300689E66 /* FECMessage.swift */,
+				833BF7C721F7BFC300689E66 /* BleTrainerControl-Bridging-Header.h */,
+			);
+			path = SwiftBleTrainerControl;
+			sourceTree = "<group>";
+		};
 		C78700761BB2D68C007BC635 = {
 			isa = PBXGroup;
 			children = (
+				833BF7C621F7BF8E00689E66 /* SwiftBleTrainerControl */,
+				833BF7C421F7BB2600689E66 /* BleTrainerControl-Bridging-Header.h */,
 				C7D6ACF51BB2DB3F0002EB58 /* CoreBluetooth.framework */,
 				C78700811BB2D68C007BC635 /* BleTrainerControl */,
+				833BF7BB21F7BAC900689E66 /* BleTrainerControlTests */,
 				C78700801BB2D68C007BC635 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -132,8 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				C787007F1BB2D68C007BC635 /* BleTrainerControl.app */,
-				C787009B1BB2D68C007BC635 /* BleTrainerControlTests.xctest */,
-				C78700A61BB2D68D007BC635 /* BleTrainerControlUITests.xctest */,
+				833BF7BA21F7BAC900689E66 /* BleTrainerControlTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -272,6 +290,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		833BF7B921F7BAC900689E66 /* BleTrainerControlTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 833BF7C121F7BAC900689E66 /* Build configuration list for PBXNativeTarget "BleTrainerControlTests" */;
+			buildPhases = (
+				833BF7B621F7BAC900689E66 /* Sources */,
+				833BF7B721F7BAC900689E66 /* Frameworks */,
+				833BF7B821F7BAC900689E66 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				833BF7C021F7BAC900689E66 /* PBXTargetDependency */,
+			);
+			name = BleTrainerControlTests;
+			productName = BleTrainerControlTests;
+			productReference = 833BF7BA21F7BAC900689E66 /* BleTrainerControlTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C787007E1BB2D68C007BC635 /* BleTrainerControl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C78700AF1BB2D68D007BC635 /* Build configuration list for PBXNativeTarget "BleTrainerControl" */;
@@ -289,61 +325,25 @@
 			productReference = C787007F1BB2D68C007BC635 /* BleTrainerControl.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C787009A1BB2D68C007BC635 /* BleTrainerControlTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C78700B21BB2D68D007BC635 /* Build configuration list for PBXNativeTarget "BleTrainerControlTests" */;
-			buildPhases = (
-				C78700971BB2D68C007BC635 /* Sources */,
-				C78700981BB2D68C007BC635 /* Frameworks */,
-				C78700991BB2D68C007BC635 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C787009D1BB2D68C007BC635 /* PBXTargetDependency */,
-			);
-			name = BleTrainerControlTests;
-			productName = BleTrainerControlTests;
-			productReference = C787009B1BB2D68C007BC635 /* BleTrainerControlTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		C78700A51BB2D68D007BC635 /* BleTrainerControlUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C78700B51BB2D68D007BC635 /* Build configuration list for PBXNativeTarget "BleTrainerControlUITests" */;
-			buildPhases = (
-				C78700A21BB2D68D007BC635 /* Sources */,
-				C78700A31BB2D68D007BC635 /* Frameworks */,
-				C78700A41BB2D68D007BC635 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C78700A81BB2D68D007BC635 /* PBXTargetDependency */,
-			);
-			name = BleTrainerControlUITests;
-			productName = BleTrainerControlUITests;
-			productReference = C78700A61BB2D68D007BC635 /* BleTrainerControlUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		C78700771BB2D68C007BC635 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Kinomap;
 				TargetAttributes = {
+					833BF7B921F7BAC900689E66 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = 938885MD3K;
+						ProvisioningStyle = Automatic;
+						TestTargetID = C787007E1BB2D68C007BC635;
+					};
 					C787007E1BB2D68C007BC635 = {
 						CreatedOnToolsVersion = 7.0;
-					};
-					C787009A1BB2D68C007BC635 = {
-						CreatedOnToolsVersion = 7.0;
-						TestTargetID = C787007E1BB2D68C007BC635;
-					};
-					C78700A51BB2D68D007BC635 = {
-						CreatedOnToolsVersion = 7.0;
-						TestTargetID = C787007E1BB2D68C007BC635;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -361,13 +361,19 @@
 			projectRoot = "";
 			targets = (
 				C787007E1BB2D68C007BC635 /* BleTrainerControl */,
-				C787009A1BB2D68C007BC635 /* BleTrainerControlTests */,
-				C78700A51BB2D68D007BC635 /* BleTrainerControlUITests */,
+				833BF7B921F7BAC900689E66 /* BleTrainerControlTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		833BF7B821F7BAC900689E66 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C787007D1BB2D68C007BC635 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -385,23 +391,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C78700991BB2D68C007BC635 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C78700A41BB2D68D007BC635 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		833BF7B621F7BAC900689E66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				833BF7CB21F7C0B800689E66 /* FECMessageTests.swift in Sources */,
+				833BF7CC21F7C0E900689E66 /* FECMessage.swift in Sources */,
+				833BF7BD21F7BAC900689E66 /* BleTrainerControlTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C787007B1BB2D68C007BC635 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -415,6 +417,7 @@
 				C7D6ACE51BB2D7C00002EB58 /* TrackResistanceViewController.m in Sources */,
 				C7D6ACD11BB2D79F0002EB58 /* SpinDownCalibrationViewController.m in Sources */,
 				C78700BF1BB2D6EC007BC635 /* ViewController.m in Sources */,
+				833BF7C921F7BFC300689E66 /* FECMessage.swift in Sources */,
 				C7D6ACF41BB2D84C0002EB58 /* BTLETrainerManager.m in Sources */,
 				C7D6ACE01BB2D7B30002EB58 /* WindResistanceViewController.m in Sources */,
 				C7D6ACEE1BB2D7EB0002EB58 /* BTLEManager.m in Sources */,
@@ -422,32 +425,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C78700971BB2D68C007BC635 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C78700A21BB2D68D007BC635 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C787009D1BB2D68C007BC635 /* PBXTargetDependency */ = {
+		833BF7C021F7BAC900689E66 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C787007E1BB2D68C007BC635 /* BleTrainerControl */;
-			targetProxy = C787009C1BB2D68C007BC635 /* PBXContainerItemProxy */;
-		};
-		C78700A81BB2D68D007BC635 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C787007E1BB2D68C007BC635 /* BleTrainerControl */;
-			targetProxy = C78700A71BB2D68D007BC635 /* PBXContainerItemProxy */;
+			targetProxy = 833BF7BF21F7BAC900689E66 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -463,6 +447,86 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		833BF7C221F7BAC900689E66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 938885MD3K;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BleTrainerControlTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.intriguingdevelopments.BleTrainerControlTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BleTrainerControl-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BleTrainerControl.app/BleTrainerControl";
+			};
+			name = Debug;
+		};
+		833BF7C321F7BAC900689E66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 938885MD3K;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BleTrainerControlTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.intriguingdevelopments.BleTrainerControlTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BleTrainerControl-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BleTrainerControl.app/BleTrainerControl";
+			};
+			name = Release;
+		};
 		C78700AD1BB2D68D007BC635 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -503,6 +567,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BleTrainerControl-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -540,6 +605,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/BleTrainerControl-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -550,12 +616,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				INFOPLIST_FILE = BleTrainerControl/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftBleTrainerControl/BleTrainerControl-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -564,66 +634,30 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				INFOPLIST_FILE = BleTrainerControl/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		C78700B31BB2D68D007BC635 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = BleTrainerControlTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControlTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BleTrainerControl.app/BleTrainerControl";
-			};
-			name = Debug;
-		};
-		C78700B41BB2D68D007BC635 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = BleTrainerControlTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControlTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BleTrainerControl.app/BleTrainerControl";
-			};
-			name = Release;
-		};
-		C78700B61BB2D68D007BC635 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = BleTrainerControlUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControlUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = BleTrainerControl;
-				USES_XCTRUNNER = YES;
-			};
-			name = Debug;
-		};
-		C78700B71BB2D68D007BC635 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = BleTrainerControlUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControlUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = BleTrainerControl;
-				USES_XCTRUNNER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftBleTrainerControl/BleTrainerControl-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		833BF7C121F7BAC900689E66 /* Build configuration list for PBXNativeTarget "BleTrainerControlTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				833BF7C221F7BAC900689E66 /* Debug */,
+				833BF7C321F7BAC900689E66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C787007A1BB2D68C007BC635 /* Build configuration list for PBXProject "BleTrainerControl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -638,24 +672,6 @@
 			buildConfigurations = (
 				C78700B01BB2D68D007BC635 /* Debug */,
 				C78700B11BB2D68D007BC635 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C78700B21BB2D68D007BC635 /* Build configuration list for PBXNativeTarget "BleTrainerControlTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C78700B31BB2D68D007BC635 /* Debug */,
-				C78700B41BB2D68D007BC635 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C78700B51BB2D68D007BC635 /* Build configuration list for PBXNativeTarget "BleTrainerControlUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C78700B61BB2D68D007BC635 /* Debug */,
-				C78700B71BB2D68D007BC635 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

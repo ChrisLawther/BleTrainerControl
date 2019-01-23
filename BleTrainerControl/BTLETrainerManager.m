@@ -8,6 +8,32 @@
 
 #import "BTLETrainerManager.h"
 
+@implementation NSData (NSData_Conversion)
+
+#pragma mark - String Conversion
+- (NSString *)hexadecimalString
+{
+    /* Returns hexadecimal string of NSData. Empty string if data is empty.   */
+
+    const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
+
+    if (!dataBuffer)
+    {
+        return [NSString string];
+    }
+
+    NSUInteger          dataLength  = [self length];
+    NSMutableString     *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+
+    for (int i = 0; i < dataLength; ++i)
+    {
+        [hexString appendFormat:@"%02x", (unsigned int)dataBuffer[i]];
+    }
+
+    return [NSString stringWithString:hexString];
+}
+@end
+
 @implementation BTLETrainerManager
 
 @synthesize calibrationStarted;
@@ -56,6 +82,21 @@
         [self resetAllData];
     }
     
+    return self;
+}
+
+-(id)initWithManager:(BTLEManager *)injectedManager
+{
+    if(self = [super init])
+    {
+        manager = injectedManager;
+        [manager setBtleManagerDelegate:self];
+
+        utils = [[Utils alloc] init];
+
+        [self resetAllData];
+    }
+
     return self;
 }
 
@@ -715,6 +756,13 @@
 //Control data pages
 -(void)sendBasicResistance:(float)totalResistancePercentValue
 {
+    //Write data for the main characteristic
+    NSData * valData = [self generateBasicResistance:totalResistancePercentValue];
+    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+}
+
+-(NSData *)generateBasicResistance:(float)totalResistancePercentValue
+{
     NSInteger totalResistanceValue = (NSInteger)(totalResistancePercentValue / 0.5);
     
     //Command to send
@@ -735,19 +783,38 @@
     bytes[11] = totalResistanceValue; //Total resistance
     
     //Checksum
-    NSArray *arrayForChecksum = [NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]], [NSNumber numberWithInteger:bytes[1]], [NSNumber numberWithInteger:bytes[2]], [NSNumber numberWithInteger:bytes[3]], [NSNumber numberWithInteger:bytes[4]], [NSNumber numberWithInteger:bytes[5]], [NSNumber numberWithInteger:bytes[6]], [NSNumber numberWithInteger:bytes[7]], [NSNumber numberWithInteger:bytes[8]], [NSNumber numberWithInteger:bytes[9]], [NSNumber numberWithInteger:bytes[10]], [NSNumber numberWithInteger:bytes[11]], nil];
+    NSArray *arrayForChecksum = [
+                                 NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]],
+                                 [NSNumber numberWithInteger:bytes[1]],
+                                 [NSNumber numberWithInteger:bytes[2]],
+                                 [NSNumber numberWithInteger:bytes[3]],
+                                 [NSNumber numberWithInteger:bytes[4]],
+                                 [NSNumber numberWithInteger:bytes[5]],
+                                 [NSNumber numberWithInteger:bytes[6]],
+                                 [NSNumber numberWithInteger:bytes[7]],
+                                 [NSNumber numberWithInteger:bytes[8]],
+                                 [NSNumber numberWithInteger:bytes[9]],
+                                 [NSNumber numberWithInteger:bytes[10]],
+                                 [NSNumber numberWithInteger:bytes[11]],
+                                 nil
+    ];
+
     NSInteger checksum = [self getChecksumWithArrayOfDecimal:arrayForChecksum];
     bytes[12] = checksum;
     
     
     //Data value
-    NSData* valData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    
-    //Write data for the main characteristic
-    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
 -(void)sendTargetPower:(float)targetPowerWValue
+{
+    //Write data for the main characteristic
+    NSData *valData = [self generateTargetPower:targetPowerWValue];
+    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+}
+
+-(NSData *)generateTargetPower:(float)targetPowerWValue
 {
     NSInteger targetPowerValue = (NSInteger)(targetPowerWValue / 0.25);
     
@@ -771,19 +838,38 @@
     bytes[11] = [utils getDecimalFromHexa:[targetPowerValueHexaString substringWithRange:NSMakeRange(0, 2)]]; //Target power MSB
     
     //Checksum
-    NSArray *arrayForChecksum = [NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]], [NSNumber numberWithInteger:bytes[1]], [NSNumber numberWithInteger:bytes[2]], [NSNumber numberWithInteger:bytes[3]], [NSNumber numberWithInteger:bytes[4]], [NSNumber numberWithInteger:bytes[5]], [NSNumber numberWithInteger:bytes[6]], [NSNumber numberWithInteger:bytes[7]], [NSNumber numberWithInteger:bytes[8]], [NSNumber numberWithInteger:bytes[9]], [NSNumber numberWithInteger:bytes[10]], [NSNumber numberWithInteger:bytes[11]], nil];
+    NSArray *arrayForChecksum = [
+                                 NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]],
+                                 [NSNumber numberWithInteger:bytes[1]],
+                                 [NSNumber numberWithInteger:bytes[2]],
+                                 [NSNumber numberWithInteger:bytes[3]],
+                                 [NSNumber numberWithInteger:bytes[4]],
+                                 [NSNumber numberWithInteger:bytes[5]],
+                                 [NSNumber numberWithInteger:bytes[6]],
+                                 [NSNumber numberWithInteger:bytes[7]],
+                                 [NSNumber numberWithInteger:bytes[8]],
+                                 [NSNumber numberWithInteger:bytes[9]],
+                                 [NSNumber numberWithInteger:bytes[10]],
+                                 [NSNumber numberWithInteger:bytes[11]],
+                                 nil
+    ];
+
     NSInteger checksum = [self getChecksumWithArrayOfDecimal:arrayForChecksum];
     bytes[12] = checksum;
     
     
     //Data value
-    NSData* valData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    
-    //Write data for the main characteristic
-    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
 -(void)sendWindResistanceCoefficient:(float)windResistanceCoefficientKgMValue windSpeed:(float)windSpeedKmHValue draftingFactor:(float)draftingFactorValue
+{
+    //Write data for the main characteristic
+    NSData *valData = [self generateWindResistanceCoefficient:windResistanceCoefficientKgMValue windSpeed:windSpeedKmHValue draftingFactor:draftingFactorValue];
+    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+}
+
+-(NSData *)generateWindResistanceCoefficient:(float)windResistanceCoefficientKgMValue windSpeed:(float)windSpeedKmHValue draftingFactor:(float)draftingFactorValue
 {
     NSInteger windResistanceCoefficientValue = (NSInteger)(windResistanceCoefficientKgMValue / 0.01);
     NSInteger windSpeedValue = (NSInteger)(windSpeedKmHValue + 127.0);
@@ -813,13 +899,17 @@
     
     
     //Data value
-    NSData* valData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    
-    //Write data for the main characteristic
-    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
 -(void)sendTrackResistanceWithGrade:(float)gradePercentValue rollingResistanceCoefficient:(float)rollingResistanceCoefficientValue
+{
+    //Write data for the main characteristic
+    NSData * valData = [self generateTrackResistanceWithGrade:gradePercentValue rollingResistanceCoefficient:rollingResistanceCoefficientValue];
+    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+}
+
+-(NSData *)generateTrackResistanceWithGrade:(float)gradePercentValue rollingResistanceCoefficient:(float)rollingResistanceCoefficientValue
 {
     NSInteger gradeValue = (NSInteger)((gradePercentValue + 200.0) / 0.01);
     NSInteger rollingResistanceCoeffValue = (NSInteger)(rollingResistanceCoefficientValue / (5 * pow(10, -5)));
@@ -844,22 +934,39 @@
     bytes[11] = rollingResistanceCoeffValue; //Rolling resistance coefficient
     
     //Checksum
-    NSArray *arrayForChecksum = [NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]], [NSNumber numberWithInteger:bytes[1]], [NSNumber numberWithInteger:bytes[2]], [NSNumber numberWithInteger:bytes[3]], [NSNumber numberWithInteger:bytes[4]], [NSNumber numberWithInteger:bytes[5]], [NSNumber numberWithInteger:bytes[6]], [NSNumber numberWithInteger:bytes[7]], [NSNumber numberWithInteger:bytes[8]], [NSNumber numberWithInteger:bytes[9]], [NSNumber numberWithInteger:bytes[10]], [NSNumber numberWithInteger:bytes[11]], nil];
+    NSArray *arrayForChecksum = [NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]],
+                                 [NSNumber numberWithInteger:bytes[1]],
+                                 [NSNumber numberWithInteger:bytes[2]],
+                                 [NSNumber numberWithInteger:bytes[3]],
+                                 [NSNumber numberWithInteger:bytes[4]],
+                                 [NSNumber numberWithInteger:bytes[5]],
+                                 [NSNumber numberWithInteger:bytes[6]],
+                                 [NSNumber numberWithInteger:bytes[7]],
+                                 [NSNumber numberWithInteger:bytes[8]],
+                                 [NSNumber numberWithInteger:bytes[9]],
+                                 [NSNumber numberWithInteger:bytes[10]],
+                                 [NSNumber numberWithInteger:bytes[11]],
+                                 nil];
+    
     NSInteger checksum = [self getChecksumWithArrayOfDecimal:arrayForChecksum];
     bytes[12] = checksum;
     
     
     //Data value
-    NSData* valData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    
-    //Write data for the main characteristic
-    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
 
 
 //Calibration request and response
 -(void)sendCalibrationRequest:(NSInteger)calibrationRequestValue
+{
+    //Write data for the main characteristic
+    NSData *valData = [self generateCalibrationRequest:calibrationRequestValue];
+    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+}
+
+-(NSData *)generateCalibrationRequest:(NSInteger)calibrationRequestValue
 {
     //Command to send
     unsigned char bytes[13] = {};
@@ -879,22 +986,38 @@
     bytes[11] = 0xFF; //Spin-down time MSB
     
     //Checksum
-    NSArray *arrayForChecksum = [NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]], [NSNumber numberWithInteger:bytes[1]], [NSNumber numberWithInteger:bytes[2]], [NSNumber numberWithInteger:bytes[3]], [NSNumber numberWithInteger:bytes[4]], [NSNumber numberWithInteger:bytes[5]], [NSNumber numberWithInteger:bytes[6]], [NSNumber numberWithInteger:bytes[7]], [NSNumber numberWithInteger:bytes[8]], [NSNumber numberWithInteger:bytes[9]], [NSNumber numberWithInteger:bytes[10]], [NSNumber numberWithInteger:bytes[11]], nil];
+    NSArray *arrayForChecksum = [
+                                 NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]],
+                                 [NSNumber numberWithInteger:bytes[1]],
+                                 [NSNumber numberWithInteger:bytes[2]],
+                                 [NSNumber numberWithInteger:bytes[3]],
+                                 [NSNumber numberWithInteger:bytes[4]],
+                                 [NSNumber numberWithInteger:bytes[5]],
+                                 [NSNumber numberWithInteger:bytes[6]],
+                                 [NSNumber numberWithInteger:bytes[7]],
+                                 [NSNumber numberWithInteger:bytes[8]],
+                                 [NSNumber numberWithInteger:bytes[9]],
+                                 [NSNumber numberWithInteger:bytes[10]],
+                                 [NSNumber numberWithInteger:bytes[11]],
+                                 nil
+    ];
+
     NSInteger checksum = [self getChecksumWithArrayOfDecimal:arrayForChecksum];
     bytes[12] = checksum;
     
     
     //Data value
-    NSData* valData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
+}
+
+-(void)sendRequestPage:(NSInteger)page
+{
     //Write data for the main characteristic
+    NSData *valData = [self generateRequestPage:page];
     [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
 }
 
-
-
-
--(void)sendRequestPage:(NSInteger)page
+-(NSData *)generateRequestPage:(NSInteger)page
 {
     //Command to send
     unsigned char bytes[13] = {};
@@ -914,16 +1037,27 @@
     bytes[11] = 0x01; //Command type (0x01 for request data page, 0x02 for request ANT-FS session)
     
     //Checksum
-    NSArray *arrayForChecksum = [NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]], [NSNumber numberWithInteger:bytes[1]], [NSNumber numberWithInteger:bytes[2]], [NSNumber numberWithInteger:bytes[3]], [NSNumber numberWithInteger:bytes[4]], [NSNumber numberWithInteger:bytes[5]], [NSNumber numberWithInteger:bytes[6]], [NSNumber numberWithInteger:bytes[7]], [NSNumber numberWithInteger:bytes[8]], [NSNumber numberWithInteger:bytes[9]], [NSNumber numberWithInteger:bytes[10]], [NSNumber numberWithInteger:bytes[11]], nil];
+    NSArray *arrayForChecksum = [
+                                 NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]],
+                                 [NSNumber numberWithInteger:bytes[1]],
+                                 [NSNumber numberWithInteger:bytes[2]],
+                                 [NSNumber numberWithInteger:bytes[3]],
+                                 [NSNumber numberWithInteger:bytes[4]],
+                                 [NSNumber numberWithInteger:bytes[5]],
+                                 [NSNumber numberWithInteger:bytes[6]],
+                                 [NSNumber numberWithInteger:bytes[7]],
+                                 [NSNumber numberWithInteger:bytes[8]],
+                                 [NSNumber numberWithInteger:bytes[9]],
+                                 [NSNumber numberWithInteger:bytes[10]],
+                                 [NSNumber numberWithInteger:bytes[11]],
+                                 nil
+    ];
+
     NSInteger checksum = [self getChecksumWithArrayOfDecimal:arrayForChecksum];
     bytes[12] = checksum;
     
-    
     //Data value
-    NSData* valData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    
-    //Write data for the main characteristic
-    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
 
@@ -931,6 +1065,13 @@
 
 
 -(void)sendCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset
+{
+    //Write data for the main characteristic
+    NSData *valData = [self generateCalibrationRequestForSpinDown:forSpinDown forZeroOffset:forZeroOffset];
+    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+}
+
+-(NSData *)generateCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset
 {
     calibrationStarted = TRUE;
     
@@ -965,27 +1106,29 @@
     bytes[11] = 0xFF;
     
     //Checksum
-    NSArray *arrayForChecksum = [NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]], [NSNumber numberWithInteger:bytes[1]], [NSNumber numberWithInteger:bytes[2]], [NSNumber numberWithInteger:bytes[3]], [NSNumber numberWithInteger:bytes[4]], [NSNumber numberWithInteger:bytes[5]], [NSNumber numberWithInteger:bytes[6]], [NSNumber numberWithInteger:bytes[7]], [NSNumber numberWithInteger:bytes[8]], [NSNumber numberWithInteger:bytes[9]], [NSNumber numberWithInteger:bytes[10]], [NSNumber numberWithInteger:bytes[11]], nil];
+    NSArray *arrayForChecksum = [
+                                 NSArray arrayWithObjects:[NSNumber numberWithInteger:bytes[0]],
+                                 [NSNumber numberWithInteger:bytes[1]],
+                                 [NSNumber numberWithInteger:bytes[2]],
+                                 [NSNumber numberWithInteger:bytes[3]],
+                                 [NSNumber numberWithInteger:bytes[4]],
+                                 [NSNumber numberWithInteger:bytes[5]],
+                                 [NSNumber numberWithInteger:bytes[6]],
+                                 [NSNumber numberWithInteger:bytes[7]],
+                                 [NSNumber numberWithInteger:bytes[8]],
+                                 [NSNumber numberWithInteger:bytes[9]],
+                                 [NSNumber numberWithInteger:bytes[10]],
+                                 [NSNumber numberWithInteger:bytes[11]],
+                                 nil
+    ];
+
     NSInteger checksum = [self getChecksumWithArrayOfDecimal:arrayForChecksum];
     bytes[12] = checksum;
     
     
     //Data value
-    NSData* valData = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    
-    //Write data for the main characteristic
-    [manager writeValue:valData toCharacteristicUUIDString:TACX_FEC_WRITE_CHARACTERISTIC];
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
-
-
-
-
-
-
-
-
-
-
 
 //Get checksum
 -(NSInteger)getChecksumWithArrayOfDecimal:(NSArray *)decimalsArray

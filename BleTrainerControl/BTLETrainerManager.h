@@ -205,6 +205,7 @@
 
 
 
+-(id)initWithManager:(BTLEManager *)injectedManager;
 
 -(void)startScanningAll;
 -(void)startScanning;
@@ -221,14 +222,23 @@
 
 //Control data pages
 -(void)sendBasicResistance:(float)totalResistancePercentValue;
+-(NSData *)generateBasicResistance:(float)totalResistancePercentValue;
+
 -(void)sendTargetPower:(float)targetPowerWValue;
+-(NSData *)generateTargetPower:(float)targetPowerWValue;
+
 -(void)sendWindResistanceCoefficient:(float)windResistanceCoefficientKgMValue windSpeed:(float)windSpeedKmHValue draftingFactor:(float)draftingFactorValue;
+-(NSData *)generateWindResistanceCoefficient:(float)windResistanceCoefficientKgMValue windSpeed:(float)windSpeedKmHValue draftingFactor:(float)draftingFactorValue;
+
 -(void)sendTrackResistanceWithGrade:(float)gradePercentValue rollingResistanceCoefficient:(float)rollingResistanceCoefficienValuet;
+-(NSData *)generateTrackResistanceWithGrade:(float)gradePercentValue rollingResistanceCoefficient:(float)rollingResistanceCoefficienValuet;
 
 //Request page
 -(void)sendRequestPage:(NSInteger)page;
+-(NSData *)generateRequestPage:(NSInteger)page;
 
 //Calibration
 -(void)sendCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset;
+-(NSData *)generateCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset;
 
 @end
