@@ -16,7 +16,7 @@ extension NSData {
         var bytes = [UInt8](repeating: 0, count: length)
         getBytes(&bytes, length: length)
 
-        return bytes.map{ String(format: "%02x", $0) }.joined()
+        return bytes.map { String(format: "%02x", $0) }.joined()
     }
 }
 
@@ -38,7 +38,9 @@ class BTLETrainerManagerTests: XCTestCase {
         let values: [Float] = [0, 1, 50, 69, 99, 100]
         for resistance in values {
             let expected = btle.generateBasicResistance(resistance)
-            let actual = try! FECMessage.basicResistance(value: resistance).message()
+            guard let actual = try? FECMessage.basicResistance(value: resistance).message() else {
+                return XCTFail("Should not have thrown")
+            }
 
             XCTAssertEqual(expected, actual, "Mismatched results for resistance value \(resistance)")
         }
@@ -55,7 +57,9 @@ class BTLETrainerManagerTests: XCTestCase {
         let values: [Float] = [0, 1, 50, 69, 99, 123, 450, 999]
         for target in values {
             let expected = btle.generateTargetPower(target)
-            let actual = try! FECMessage.targetPower(value: target).message()
+            guard let actual = try? FECMessage.targetPower(value: target).message() else {
+                return XCTFail("Should NOT have thrown")
+            }
 
             XCTAssertEqual(expected, actual, "Mismatched results for target power value \(target)")
         }
@@ -71,10 +75,17 @@ class BTLETrainerManagerTests: XCTestCase {
         for resistance in resistances {
             for speed in speeds {
                 for factor in factors {
-                    let expected = btle.generateWindResistanceCoefficient(resistance, windSpeed: speed, draftingFactor: factor)
-                    let actual = try! FECMessage.windResistanceCoefficient(kgMValue: resistance, windspeed: speed, draftingFactor: factor).message()
+                    let expected = btle.generateWindResistanceCoefficient(resistance, windSpeed: speed,
+                                                                          draftingFactor: factor)
+                    guard let actual = try? FECMessage.windResistanceCoefficient(
+                        kgMValue: resistance,
+                        windspeed: speed,
+                        draftingFactor: factor).message() else {
+                            return XCTFail("Should NOT have thrown")
+                    }
 
-                    XCTAssertEqual(expected, actual, "Mismatched results for resistance \(resistance), speed \(speed) and factor \(factor)")
+                    XCTAssertEqual(expected, actual,
+                        "Mismatched results for resistance \(resistance), speed \(speed) and factor \(factor)")
                 }
             }
         }
@@ -90,7 +101,10 @@ class BTLETrainerManagerTests: XCTestCase {
         for grade in grades {
             for coefficient in coefficients {
                 let expected = btle.generateTrackResistance(withGrade: grade, rollingResistanceCoefficient: coefficient)
-                let actual = try! FECMessage.trackResistance(grade: grade, coefficient: coefficient).message()
+                guard let actual = try? FECMessage.trackResistance(
+                    grade: grade, coefficient: coefficient).message() else {
+                        return XCTFail("Should NOT have thrown")
+                }
 
                 XCTAssertEqual(expected, actual, "Mismatched results for grade \(grade) and coefficient \(coefficient)")
             }
@@ -103,9 +117,14 @@ class BTLETrainerManagerTests: XCTestCase {
         for spindown in [true, false] {
             for zeroOffset in [true, false] {
                 let expected = btle.generateCalibrationRequest(forSpinDown: spindown, forZeroOffset: zeroOffset)
-                let actual = try! FECMessage.calibrationRequestForSpindown(spindown: spindown, zeroOffset: zeroOffset).message()
+                guard let actual = try? FECMessage.calibrationRequestForSpindown(
+                    spindown: spindown,
+                    zeroOffset: zeroOffset).message() else {
+                        return XCTFail("Should not have thrown")
+                }
 
-                XCTAssertEqual(expected, actual, "Mismatched results for spindown \(spindown) and zeroOffset \(zeroOffset)")
+                XCTAssertEqual(expected, actual,
+                               "Mismatched results for spindown \(spindown) and zeroOffset \(zeroOffset)")
             }
         }
 
@@ -115,33 +134,12 @@ class BTLETrainerManagerTests: XCTestCase {
         let btle = BTLETrainerManager()
         for page in 0...50 {
             let expected = btle.generateRequestPage(page)
-            let actual = try! FECMessage.request(page: page).message()
+            guard let actual = try? FECMessage.request(page: page).message() else {
+                return XCTFail("Should NOT have thrown")
+            }
 
             XCTAssertEqual(expected, actual, "Mismatched results for page \(page)")
         }
     }
 
 }
-
-
-/*
- -(void)sendBasicResistance:(float)totalResistancePercentValue;
- -(NSData *)generateBasicResistance:(float)totalResistancePercentValue;
-
- -(void)sendTargetPower:(float)targetPowerWValue;
- -(NSData *)generateTargetPower:(float)targetPowerWValue;
-
- -(void)sendWindResistanceCoefficient:(float)windResistanceCoefficientKgMValue windSpeed:(float)windSpeedKmHValue draftingFactor:(float)draftingFactorValue;
- -(NSData *)generateWindResistanceCoefficient:(float)windResistanceCoefficientKgMValue windSpeed:(float)windSpeedKmHValue draftingFactor:(float)draftingFactorValue;
-
- -(void)sendTrackResistanceWithGrade:(float)gradePercentValue rollingResistanceCoefficient:(float)rollingResistanceCoefficienValuet;
- -(NSData *)generateTrackResistanceWithGrade:(float)gradePercentValue rollingResistanceCoefficient:(float)rollingResistanceCoefficienValuet;
-
- //Request page
- -(void)sendRequestPage:(NSInteger)page;
- -(NSData *)generateRequestPage:(NSInteger)page;
-
- //Calibration
- -(void)sendCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset;
- -(NSData *)generateCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset;
- */

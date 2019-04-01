@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		832D7E232252117E0043CCD3 /* SwiftBTLETrainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E222252117E0043CCD3 /* SwiftBTLETrainerManager.swift */; };
+		832D7E25225219770043CCD3 /* TrainerManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E24225219770043CCD3 /* TrainerManagerTests.swift */; };
 		833BF7BD21F7BAC900689E66 /* BleTrainerControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */; };
 		833BF7C921F7BFC300689E66 /* FECMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7C821F7BFC300689E66 /* FECMessage.swift */; };
 		833BF7CB21F7C0B800689E66 /* FECMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */; };
@@ -48,6 +50,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		832D7E222252117E0043CCD3 /* SwiftBTLETrainerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBTLETrainerManager.swift; sourceTree = "<group>"; };
+		832D7E24225219770043CCD3 /* TrainerManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerManagerTests.swift; sourceTree = "<group>"; };
 		833BF7BA21F7BAC900689E66 /* BleTrainerControlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BleTrainerControlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleTrainerControlTests.swift; sourceTree = "<group>"; };
 		833BF7BE21F7BAC900689E66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -122,6 +126,7 @@
 				833BF7BE21F7BAC900689E66 /* Info.plist */,
 				833BF7C521F7BB8800689E66 /* BleTrainerControlTests-Bridging-Header.h */,
 				833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */,
+				832D7E24225219770043CCD3 /* TrainerManagerTests.swift */,
 			);
 			path = BleTrainerControlTests;
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 			children = (
 				833BF7C821F7BFC300689E66 /* FECMessage.swift */,
 				833BF7C721F7BFC300689E66 /* BleTrainerControl-Bridging-Header.h */,
+				832D7E222252117E0043CCD3 /* SwiftBTLETrainerManager.swift */,
 			);
 			path = SwiftBleTrainerControl;
 			sourceTree = "<group>";
@@ -315,6 +321,7 @@
 				C787007B1BB2D68C007BC635 /* Sources */,
 				C787007C1BB2D68C007BC635 /* Frameworks */,
 				C787007D1BB2D68C007BC635 /* Resources */,
+				832D7E262252590E0043CCD3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -393,6 +400,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		832D7E262252590E0043CCD3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		833BF7B621F7BAC900689E66 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -401,6 +428,7 @@
 				833BF7CB21F7C0B800689E66 /* FECMessageTests.swift in Sources */,
 				833BF7CC21F7C0E900689E66 /* FECMessage.swift in Sources */,
 				833BF7BD21F7BAC900689E66 /* BleTrainerControlTests.swift in Sources */,
+				832D7E25225219770043CCD3 /* TrainerManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +440,7 @@
 				C7D6ACEB1BB2D7DE0002EB58 /* Utils.m in Sources */,
 				C7D6ACDB1BB2D7AD0002EB58 /* TargetPowerViewController.m in Sources */,
 				C78700841BB2D68C007BC635 /* main.m in Sources */,
+				832D7E232252117E0043CCD3 /* SwiftBTLETrainerManager.swift in Sources */,
 				C78700C11BB2D6EC007BC635 /* ConnectionViewController.m in Sources */,
 				C7D6ACD61BB2D7A60002EB58 /* BasicResistanceViewController.m in Sources */,
 				C7D6ACE51BB2D7C00002EB58 /* TrackResistanceViewController.m in Sources */,

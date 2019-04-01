@@ -241,4 +241,7 @@
 -(void)sendCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset;
 -(NSData *)generateCalibrationRequestForSpinDown:(BOOL)forSpinDown forZeroOffset:(BOOL)forZeroOffset;
 
+// Testing
+-(void)dataReceivedByCharacteristic:(CBUUID *)characteristic data:(NSData *)data error:(NSError *)error;
+
 @end

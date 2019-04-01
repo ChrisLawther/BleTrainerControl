@@ -10,7 +10,6 @@ import XCTest
 
 class FECMessageTests: XCTestCase {
 
-
     @objc
     func testCorrectMessageLength() {
         let brMessage = try? FECMessage.basicResistance(value: 50).message()
@@ -31,8 +30,9 @@ class FECMessageTests: XCTestCase {
     @objc
     func testWindResistanceThrowsOnInvalidCoefficients() {
         do {
-            try FECMessage.windResistanceCoefficient(kgMValue: 3, windspeed: 17, draftingFactor: 0.2).message().asHex()
-            XCTFail()
+            _ = try FECMessage.windResistanceCoefficient(kgMValue: 3, windspeed: 17,
+                                                         draftingFactor: 0.2).message().asHex()
+            XCTFail("Should have thrown")
         } catch {
             // Pass
         }
@@ -40,7 +40,7 @@ class FECMessageTests: XCTestCase {
 
     @objc
     func testBasicResistanceProducesCorrectMessage() {
-        let resistance:UInt8 = 50
+        let resistance: UInt8 = 50
         let brMessage = try? FECMessage.basicResistance(value: Float(resistance)).message()
         // Correct page
         XCTAssertEqual(brMessage?[4], 0x30)
@@ -50,7 +50,7 @@ class FECMessageTests: XCTestCase {
 
     @objc
     func testTargetValueProducesCorrectMessage() {
-        let target:UInt16 = 123
+        let target: UInt16 = 123
         let msg = try? FECMessage.targetPower(value: Float(target)).message()
         // Correct page
         XCTAssertEqual(msg?[4], 0x31)
@@ -60,10 +60,3 @@ class FECMessageTests: XCTestCase {
         XCTAssertEqual(msg?[11], msb)
     }
 }
-
-
-//    try? FECMessage.windResistanceCoefficient(kgMValue: 0.5, windspeed: 17, draftingFactor: 0.2).message().asHex()
-//    try? FECMessage.trackResistance(grade: 17, coefficient: 0.002).message().asHex()
-//
-//    try? FECMessage.calibrationRequestForSpindown(spindown: true, zeroOffset: true).message().asHex()
-//    try? FECMessage.request(page: 7).message().asHex()
