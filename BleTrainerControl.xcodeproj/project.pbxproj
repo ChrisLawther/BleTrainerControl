@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		832D7E232252117E0043CCD3 /* SwiftBTLETrainerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E222252117E0043CCD3 /* SwiftBTLETrainerManager.swift */; };
-		832D7E25225219770043CCD3 /* TrainerManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E24225219770043CCD3 /* TrainerManagerTests.swift */; };
+		832D7E25225219770043CCD3 /* FECResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E24225219770043CCD3 /* FECResponseTests.swift */; };
+		832D7E28225370CF0043CCD3 /* FECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E27225370CF0043CCD3 /* FECResponse.swift */; };
+		832D7E2A225370F80043CCD3 /* FECMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E29225370F80043CCD3 /* FECMessage.swift */; };
+		832D7E2B225379150043CCD3 /* FECResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E27225370CF0043CCD3 /* FECResponse.swift */; };
+		832D7E2C225379190043CCD3 /* FECMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832D7E29225370F80043CCD3 /* FECMessage.swift */; };
 		833BF7BD21F7BAC900689E66 /* BleTrainerControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */; };
-		833BF7C921F7BFC300689E66 /* FECMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7C821F7BFC300689E66 /* FECMessage.swift */; };
-		833BF7CB21F7C0B800689E66 /* FECMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */; };
-		833BF7CC21F7C0E900689E66 /* FECMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7C821F7BFC300689E66 /* FECMessage.swift */; };
+		833BF7C921F7BFC300689E66 /* FECRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7C821F7BFC300689E66 /* FECRequest.swift */; };
+		833BF7CB21F7C0B800689E66 /* FECRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7CA21F7C0B800689E66 /* FECRequestTests.swift */; };
+		833BF7CC21F7C0E900689E66 /* FECRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833BF7C821F7BFC300689E66 /* FECRequest.swift */; };
 		C78700841BB2D68C007BC635 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700831BB2D68C007BC635 /* main.m */; };
 		C78700871BB2D68C007BC635 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C78700861BB2D68C007BC635 /* AppDelegate.m */; };
 		C78700901BB2D68C007BC635 /* BleTrainerControl.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C787008E1BB2D68C007BC635 /* BleTrainerControl.xcdatamodeld */; };
@@ -51,15 +55,17 @@
 
 /* Begin PBXFileReference section */
 		832D7E222252117E0043CCD3 /* SwiftBTLETrainerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBTLETrainerManager.swift; sourceTree = "<group>"; };
-		832D7E24225219770043CCD3 /* TrainerManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainerManagerTests.swift; sourceTree = "<group>"; };
+		832D7E24225219770043CCD3 /* FECResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FECResponseTests.swift; sourceTree = "<group>"; };
+		832D7E27225370CF0043CCD3 /* FECResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FECResponse.swift; sourceTree = "<group>"; };
+		832D7E29225370F80043CCD3 /* FECMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FECMessage.swift; sourceTree = "<group>"; };
 		833BF7BA21F7BAC900689E66 /* BleTrainerControlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BleTrainerControlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleTrainerControlTests.swift; sourceTree = "<group>"; };
 		833BF7BE21F7BAC900689E66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		833BF7C421F7BB2600689E66 /* BleTrainerControl-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BleTrainerControl-Bridging-Header.h"; sourceTree = "<group>"; };
 		833BF7C521F7BB8800689E66 /* BleTrainerControlTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BleTrainerControlTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		833BF7C721F7BFC300689E66 /* BleTrainerControl-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BleTrainerControl-Bridging-Header.h"; sourceTree = "<group>"; };
-		833BF7C821F7BFC300689E66 /* FECMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FECMessage.swift; sourceTree = "<group>"; };
-		833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FECMessageTests.swift; sourceTree = "<group>"; };
+		833BF7C821F7BFC300689E66 /* FECRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FECRequest.swift; sourceTree = "<group>"; };
+		833BF7CA21F7C0B800689E66 /* FECRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FECRequestTests.swift; sourceTree = "<group>"; };
 		C787007F1BB2D68C007BC635 /* BleTrainerControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BleTrainerControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C78700831BB2D68C007BC635 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C78700851BB2D68C007BC635 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -125,8 +131,8 @@
 				833BF7BC21F7BAC900689E66 /* BleTrainerControlTests.swift */,
 				833BF7BE21F7BAC900689E66 /* Info.plist */,
 				833BF7C521F7BB8800689E66 /* BleTrainerControlTests-Bridging-Header.h */,
-				833BF7CA21F7C0B800689E66 /* FECMessageTests.swift */,
-				832D7E24225219770043CCD3 /* TrainerManagerTests.swift */,
+				833BF7CA21F7C0B800689E66 /* FECRequestTests.swift */,
+				832D7E24225219770043CCD3 /* FECResponseTests.swift */,
 			);
 			path = BleTrainerControlTests;
 			sourceTree = "<group>";
@@ -134,9 +140,11 @@
 		833BF7C621F7BF8E00689E66 /* SwiftBleTrainerControl */ = {
 			isa = PBXGroup;
 			children = (
-				833BF7C821F7BFC300689E66 /* FECMessage.swift */,
+				833BF7C821F7BFC300689E66 /* FECRequest.swift */,
+				832D7E27225370CF0043CCD3 /* FECResponse.swift */,
 				833BF7C721F7BFC300689E66 /* BleTrainerControl-Bridging-Header.h */,
 				832D7E222252117E0043CCD3 /* SwiftBTLETrainerManager.swift */,
+				832D7E29225370F80043CCD3 /* FECMessage.swift */,
 			);
 			path = SwiftBleTrainerControl;
 			sourceTree = "<group>";
@@ -350,6 +358,7 @@
 					};
 					C787007E1BB2D68C007BC635 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 938885MD3K;
 						LastSwiftMigration = 1010;
 					};
 				};
@@ -425,10 +434,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				833BF7CB21F7C0B800689E66 /* FECMessageTests.swift in Sources */,
-				833BF7CC21F7C0E900689E66 /* FECMessage.swift in Sources */,
+				832D7E2B225379150043CCD3 /* FECResponse.swift in Sources */,
+				833BF7CB21F7C0B800689E66 /* FECRequestTests.swift in Sources */,
+				833BF7CC21F7C0E900689E66 /* FECRequest.swift in Sources */,
 				833BF7BD21F7BAC900689E66 /* BleTrainerControlTests.swift in Sources */,
-				832D7E25225219770043CCD3 /* TrainerManagerTests.swift in Sources */,
+				832D7E2C225379190043CCD3 /* FECMessage.swift in Sources */,
+				832D7E25225219770043CCD3 /* FECResponseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,8 +456,10 @@
 				C7D6ACD61BB2D7A60002EB58 /* BasicResistanceViewController.m in Sources */,
 				C7D6ACE51BB2D7C00002EB58 /* TrackResistanceViewController.m in Sources */,
 				C7D6ACD11BB2D79F0002EB58 /* SpinDownCalibrationViewController.m in Sources */,
+				832D7E28225370CF0043CCD3 /* FECResponse.swift in Sources */,
 				C78700BF1BB2D6EC007BC635 /* ViewController.m in Sources */,
-				833BF7C921F7BFC300689E66 /* FECMessage.swift in Sources */,
+				833BF7C921F7BFC300689E66 /* FECRequest.swift in Sources */,
+				832D7E2A225370F80043CCD3 /* FECMessage.swift in Sources */,
 				C7D6ACF41BB2D84C0002EB58 /* BTLETrainerManager.m in Sources */,
 				C7D6ACE01BB2D7B30002EB58 /* WindResistanceViewController.m in Sources */,
 				C7D6ACEE1BB2D7EB0002EB58 /* BTLEManager.m in Sources */,
@@ -647,8 +660,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEVELOPMENT_TEAM = 938885MD3K;
 				INFOPLIST_FILE = BleTrainerControl/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -665,8 +679,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEVELOPMENT_TEAM = 938885MD3K;
 				INFOPLIST_FILE = BleTrainerControl/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kinomap.BleTrainerControl;
 				PRODUCT_NAME = "$(TARGET_NAME)";

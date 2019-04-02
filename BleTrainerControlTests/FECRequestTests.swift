@@ -1,5 +1,5 @@
 //
-//  FECMessageTests.swift
+//  FECRequestTests.swift
 //  BleTrainerControlTests
 //
 //  Created by Chris on 22/01/2019.
@@ -8,17 +8,17 @@
 
 import XCTest
 
-class FECMessageTests: XCTestCase {
+class FECRequestTests: XCTestCase {
 
     @objc
     func testCorrectMessageLength() {
-        let brMessage = try? FECMessage.basicResistance(value: 50).message()
+        let brMessage = try? FECRequest.basicResistance(value: 50).message()
         XCTAssertEqual(brMessage?.count, 13)
     }
 
     @objc
     func testCorrectChecksum() {
-        let brMessage = try? FECMessage.basicResistance(value: 50).message()
+        let brMessage = try? FECRequest.basicResistance(value: 50).message()
         // Expected checksum
         let expectedChecksum = brMessage?.subdata(in: 0..<12).reduce(0) { (checksum, value) in return checksum ^ value }
         XCTAssertEqual(brMessage?.last, expectedChecksum)
@@ -30,7 +30,7 @@ class FECMessageTests: XCTestCase {
     @objc
     func testWindResistanceThrowsOnInvalidCoefficients() {
         do {
-            _ = try FECMessage.windResistanceCoefficient(kgMValue: 3, windspeed: 17,
+            _ = try FECRequest.windResistanceCoefficient(kgMValue: 3, windspeed: 17,
                                                          draftingFactor: 0.2).message().asHex()
             XCTFail("Should have thrown")
         } catch {
@@ -41,7 +41,7 @@ class FECMessageTests: XCTestCase {
     @objc
     func testBasicResistanceProducesCorrectMessage() {
         let resistance: UInt8 = 50
-        let brMessage = try? FECMessage.basicResistance(value: Float(resistance)).message()
+        let brMessage = try? FECRequest.basicResistance(value: Float(resistance)).message()
         // Correct page
         XCTAssertEqual(brMessage?[4], 0x30)
         // Correct value
@@ -51,7 +51,7 @@ class FECMessageTests: XCTestCase {
     @objc
     func testTargetValueProducesCorrectMessage() {
         let target: UInt16 = 123
-        let msg = try? FECMessage.targetPower(value: Float(target)).message()
+        let msg = try? FECRequest.targetPower(value: Float(target)).message()
         // Correct page
         XCTAssertEqual(msg?[4], 0x31)
         // Correct value

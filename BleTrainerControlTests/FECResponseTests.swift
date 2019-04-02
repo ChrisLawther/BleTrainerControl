@@ -1,5 +1,5 @@
 //
-//  TrainerManagerTests.swift
+//  FECResponseTests.swift
 //  BleTrainerControlTests
 //
 //  Created by Chris on 01/04/2019.
@@ -34,33 +34,6 @@ extension UInt32 {
     }
 }
 
-enum EquipmentType: UInt8 {
-    case general = 16
-    case treadmill = 19
-    case elliptical = 20
-    case stationaryBike = 21
-    case rower = 22
-    case climber = 23
-    case nordicSkier = 24
-    case trainer = 25
-}
-
-struct Capabilities: OptionSet {
-    let rawValue: UInt8
-
-    static let virtualSpeed = Capabilities(rawValue: 1 << 4)
-    static let distanceTravelled = Capabilities(rawValue: 1 << 5)
-    static let hrDataSource = Capabilities(rawValue: 3 << 6)
-}
-
-struct FECapabilities: OptionSet {
-    let rawValue: UInt8
-
-    static let basicResistanceMode = FECapabilities(rawValue: 1 << 0)
-    static let targetPowerMode = FECapabilities(rawValue: 1 << 1)
-    static let simulationMode = FECapabilities(rawValue: 1 << 2)
-}
-
 enum CBUUIDs {
     static let vortexPrimary = CBUUID(string: "669AA305-0C08-969E-E211-86AD5062675F")
     static let fecRead = CBUUID(string: "6E40FEC2-B5A3-F393-E0A9-E50E24DCCA9E")
@@ -85,7 +58,7 @@ enum TestData {
         return Data(packet + [packet.checksum])
     }
 
-    static func page2(temp: UInt8, speedCondition: Int, tempCondition: Int,
+    static func page2(temp: UInt8, speedCondition: UInt8, tempCondition: UInt8,
                       targetSpeed: UInt16, targetSpindown: UInt16) -> Data {
 
         let status: UInt8 = (1 << 7) | (1 << 6)
@@ -103,7 +76,7 @@ enum TestData {
     }
 
     // swiftlint:disable:next function_parameter_count
-    static func page16(capabilities: Capabilities, type: EquipmentType, elapsed: UInt8,
+    static func page16(capabilities: FECapabilities, type: EquipmentType, elapsed: UInt8,
                        distance: UInt8, heartrate: UInt8, speed: UInt16) -> Data {
 
         let (speedHi, speedLo) = speed.hiLo
@@ -259,6 +232,16 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(1, btle.spinDownCalibrationResponse)
         XCTAssertEqual(Float(spindown), btle.spinDownTimeResponseSeconds)
         XCTAssertEqual(expectedTemp, btle.temperatureResponseDegC)
+
+        let response = FECResponse(from: data)
+
+        if case let .calibrationResponse(decodedTemp, decodedOffset, decodedSpindown)? = response {
+            XCTAssertEqual(temp, decodedTemp)
+            XCTAssertEqual(zeroOffset, decodedOffset)
+            XCTAssertEqual(spindown, decodedSpindown)
+        } else {
+            XCTFail("Data didn't decode as .calibrationResponse")
+        }
     }
 
     func testPage1WithoutSpindownIsCorrectlyDecoded() {
@@ -304,8 +287,8 @@ class TrainerManagerTests: XCTestCase {
         let speed: UInt16 = 0x5555
         let temp: UInt8 = 60
 
-        let speedCondition = 0x01
-        let tempCondition = 0x02
+        let speedCondition: UInt8 = 0x01
+        let tempCondition: UInt8 = 0x02
 
         let data = TestData.page2(temp: temp, speedCondition: speedCondition,
                                   tempCondition: tempCondition, targetSpeed: speed, targetSpindown: spindown)
@@ -315,20 +298,30 @@ class TrainerManagerTests: XCTestCase {
         let expectedTemp = Float(temp / 2 - 25)
         XCTAssertEqual(expectedTemp, btle.currentTemperatureDegC)
 
-        XCTAssertEqual(speedCondition, btle.speedCondition)
-        XCTAssertEqual(tempCondition, btle.temperatureCondition)
+        XCTAssertEqual(Int(speedCondition), btle.speedCondition)
+        XCTAssertEqual(Int(tempCondition), btle.temperatureCondition)
 
         let expectedKmh = Float(speed) * 3.6 / 1000
         XCTAssertEqual(expectedKmh, btle.targetSpeedKmH)
 
         let expectedSpindownSeconds = Float(spindown) / 1000
         XCTAssertEqual(expectedSpindownSeconds, btle.targetSpinDownTimeSeconds)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.calibrationProgress(temp: temp,
+                                                          zeroOffsetStatus: 1,
+                                                          spindownStatus: 1,
+                                                          speedCondition: speedCondition,
+                                                          tempCondition: tempCondition,
+                                                          targetSpeed: speed,
+                                                          targetSpindown: spindown)
+        XCTAssertEqual(expectation, response)
     }
 
     func testPage16() {
         let btle = BTLETrainerManager()
 
-        let capabilities: Capabilities = [.distanceTravelled, .virtualSpeed, .hrDataSource]
+        let capabilities: FECapabilities = [.distanceTravelled, .virtualSpeed, .hrDataSource]
         let type: EquipmentType = .trainer
         let elapsed: UInt8 = 123
         let distance: UInt8 = 69
@@ -348,6 +341,15 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Int(distance), btle.distanceTraveledMeters)
         XCTAssertEqual(Int(heartrate), btle.heartRateBPM)
         XCTAssertEqual(expectedSpeed, btle.speedKmH)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.generalFEData(capabilities: capabilities,
+                                                    type: type,
+                                                    elapsed: elapsed,
+                                                    distance: distance,
+                                                    heartrate: heartrate,
+                                                    speed: expectedSpeed)
+        XCTAssertEqual(expectation, response)
     }
 
     func testPage17() {
@@ -364,6 +366,14 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Float(incline) * 0.01, btle.inclinePercent)
         XCTAssertEqual(Float(cycleLength) * 0.01, btle.cycleLengthM, accuracy: 0.01)
         XCTAssertEqual(Float(resistance) / 2, btle.resistanceLevelPercent)
+
+        let inclinePercentage = Float(incline) / 100
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.generalSettings(cycleLength: cycleLength,
+                                                      inclinePercentage: inclinePercentage,
+                                                      resistanceLevel: resistance / 2)
+        XCTAssertEqual(expectation, response)
     }
 
     func testPage25() {
@@ -382,6 +392,13 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Int(cadence), btle.cadenceRPM)
         XCTAssertEqual(Int(power), btle.accumulatedPowerW)
         XCTAssertEqual(Int(instantaneous), btle.powerW)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.trainerSpecific(updates: updates,
+                                                      cadence: cadence,
+                                                      accumulatedPower: power,
+                                                      instantaneousPower: instantaneous)
+        XCTAssertEqual(expectation, response)
     }
 
     // Basic resistance
@@ -389,12 +406,18 @@ class TrainerManagerTests: XCTestCase {
         let btle = BTLETrainerManager()
 
         let resistance: UInt8 = 99
+        let expectedResistance = Float(resistance) / 2
 
         let data = TestData.page48(resistance: resistance)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
-        XCTAssertEqual(Float(resistance) / 2, btle.totalResistancePercent)
+        XCTAssertEqual(expectedResistance, btle.totalResistancePercent)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.basicResistance(resistance: expectedResistance)
+
+        XCTAssertEqual(expectation, response)
     }
 
     // Target power
@@ -402,12 +425,18 @@ class TrainerManagerTests: XCTestCase {
         let btle = BTLETrainerManager()
 
         let targetPower: UInt16 = 456
+        let expectedPower = Float(targetPower) / 4
 
         let data = TestData.page49(target: targetPower)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
-        XCTAssertEqual(Float(targetPower) / 4, btle.targetPowerW)
+        XCTAssertEqual(expectedPower, btle.targetPowerW)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.targetPower(target: expectedPower)
+
+        XCTAssertEqual(expectation, response)
     }
 
     // Wind resistance
@@ -425,23 +454,36 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Float(coefficient) * 0.01, btle.windResistanceCoefficientKgM)
         XCTAssertEqual(Float(windSpeed) - 127, btle.windSpeedKmH)
         XCTAssertEqual(Float(factor) / 100, btle.draftingFactor)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.windResistance(coefficient: coefficient,
+                                                     windspeed: windSpeed,
+                                                     factor: factor)
+
+        XCTAssertEqual(expectation, response)
     }
 
     // Track resistance
     func testPage51() {
         let btle = BTLETrainerManager()
 
-        let grade: UInt16 = 0x4321
+        let grade: UInt16 = 0x1234
         let resistance: UInt8 = 77
+
+        let gradePercentage = Float(grade) / 100
+        let rrCoefficient = Float(resistance) * 5 * pow(10, -5)
 
         let data = TestData.page51(grade: grade, resistance: resistance)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
-        let rrCoefficient = Float(resistance) * 5 * pow(10, -5)
-
-        XCTAssertEqual(Float(grade) / 100, btle.gradePercent)
+        XCTAssertEqual(gradePercentage, btle.gradePercent)
         XCTAssertEqual(rrCoefficient, btle.rollingResistanceCoefficient)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.trackResistance(coefficient: rrCoefficient, grade: gradePercentage)
+
+        XCTAssertEqual(expectation, response)
     }
 
     // FE capabilities
@@ -458,6 +500,11 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertTrue(btle.supportedMode.contains("resistance : true"))
         XCTAssertTrue(btle.supportedMode.contains("power : true"))
         XCTAssertTrue(btle.supportedMode.contains("Simulation : true"))
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.feCapabilities(maxResistance: max, capabilities: capabilities)
+
+        XCTAssertEqual(expectation, response)
     }
 
     // User configuration
@@ -468,19 +515,32 @@ class TrainerManagerTests: XCTestCase {
         let bicycleWeight: UInt16 = 100
         let ratio: UInt8 = 205
 
+        let weightKg = Float(weight) / 100
+        let diameterM = Float(wheelDiameter) / 100
+        let bikeKg = Float(bicycleWeight) / 20
+        let gearRatio = Float(ratio) * 0.03
+
         let btle = BTLETrainerManager()
         let data = TestData.page55(userWeight: weight, bicycleWeight: bicycleWeight,
                                    diameterOffset: diameterOffset, wheel: wheelDiameter, ratio: ratio)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
-        XCTAssertEqual(Float(weight) / 100, btle.userWeightKg)
+        XCTAssertEqual(weightKg, btle.userWeightKg)
         XCTAssertEqual(Int(diameterOffset), btle.bicycleWheelDiameterOffsetMm)
 
-        XCTAssertEqual(Float(bicycleWeight) / 20, btle.bicycleWeightKg)
+        XCTAssertEqual(bikeKg, btle.bicycleWeightKg)
 
-        XCTAssertEqual(Float(wheelDiameter) / 100, btle.bicycleWheelDiameterM)
-        XCTAssertEqual(Float(ratio) * 0.03, btle.gearRatio)
+        XCTAssertEqual(diameterM, btle.bicycleWheelDiameterM)
+        XCTAssertEqual(gearRatio, btle.gearRatio)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.userConfiguration(userWeightKg: weightKg,
+                                                        bicycleWeightKg: bikeKg,
+                                                        diameterOffset: diameterOffset,
+                                                        wheelDiameterM: diameterM,
+                                                        ratio: gearRatio)
+        XCTAssertEqual(expectation, response)
     }
 
     // Command status
@@ -498,6 +558,13 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Int(sequence), btle.sequence)
         XCTAssertEqual(Int(status), btle.commandStatus)
         XCTAssertEqual(String(format: "%08x", payload), btle.dataString)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.commandStatus(commandId: command,
+                                                    sequence: sequence,
+                                                    status: status,
+                                                    data: payload)
+        XCTAssertEqual(expectation, response)
     }
 
     // Manufacturer's identification
@@ -513,6 +580,12 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Int(hwRevision), btle.hwRevision)
         XCTAssertEqual(Int(manufacturerId), btle.manufacturerID)
         XCTAssertEqual(Int(modelNumber), btle.modelNumber)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.manufacturersId(hardwareId: hwRevision,
+                                                      manufacturer: manufacturerId,
+                                                      model: modelNumber)
+        XCTAssertEqual(expectation, response)
     }
 
     // Product information
@@ -528,5 +601,11 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Int(swRevisionMinor), btle.swRevisionSupplemental)
         XCTAssertEqual(Int(swRevisionMajor), btle.swRevisionMain)
         XCTAssertEqual(Int(serialNumber), btle.serialNumber)
+
+        let response = FECResponse(from: data)
+        let expectation = FECResponse.productInformation(majorVersion: swRevisionMajor,
+                                                         minorVersion: swRevisionMinor,
+                                                         serial: serialNumber)
+        XCTAssertEqual(expectation, response)
     }
 }

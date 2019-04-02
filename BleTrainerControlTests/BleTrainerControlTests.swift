@@ -38,7 +38,7 @@ class BTLETrainerManagerTests: XCTestCase {
         let values: [Float] = [0, 1, 50, 69, 99, 100]
         for resistance in values {
             let expected = btle.generateBasicResistance(resistance)
-            guard let actual = try? FECMessage.basicResistance(value: resistance).message() else {
+            guard let actual = try? FECRequest.basicResistance(value: resistance).message() else {
                 return XCTFail("Should not have thrown")
             }
 
@@ -47,8 +47,8 @@ class BTLETrainerManagerTests: XCTestCase {
     }
 
     func testBasicResistanceRejectsOutOfRange() {
-        XCTAssertThrowsError(try FECMessage.basicResistance(value: -1).message())
-        XCTAssertThrowsError(try FECMessage.basicResistance(value: 101).message())
+        XCTAssertThrowsError(try FECRequest.basicResistance(value: -1).message())
+        XCTAssertThrowsError(try FECRequest.basicResistance(value: 101).message())
     }
 
     func testTargetPowerMatches() {
@@ -57,7 +57,7 @@ class BTLETrainerManagerTests: XCTestCase {
         let values: [Float] = [0, 1, 50, 69, 99, 123, 450, 999]
         for target in values {
             let expected = btle.generateTargetPower(target)
-            guard let actual = try? FECMessage.targetPower(value: target).message() else {
+            guard let actual = try? FECRequest.targetPower(value: target).message() else {
                 return XCTFail("Should NOT have thrown")
             }
 
@@ -77,7 +77,7 @@ class BTLETrainerManagerTests: XCTestCase {
                 for factor in factors {
                     let expected = btle.generateWindResistanceCoefficient(resistance, windSpeed: speed,
                                                                           draftingFactor: factor)
-                    guard let actual = try? FECMessage.windResistanceCoefficient(
+                    guard let actual = try? FECRequest.windResistanceCoefficient(
                         kgMValue: resistance,
                         windspeed: speed,
                         draftingFactor: factor).message() else {
@@ -101,7 +101,7 @@ class BTLETrainerManagerTests: XCTestCase {
         for grade in grades {
             for coefficient in coefficients {
                 let expected = btle.generateTrackResistance(withGrade: grade, rollingResistanceCoefficient: coefficient)
-                guard let actual = try? FECMessage.trackResistance(
+                guard let actual = try? FECRequest.trackResistance(
                     grade: grade, coefficient: coefficient).message() else {
                         return XCTFail("Should NOT have thrown")
                 }
@@ -117,7 +117,7 @@ class BTLETrainerManagerTests: XCTestCase {
         for spindown in [true, false] {
             for zeroOffset in [true, false] {
                 let expected = btle.generateCalibrationRequest(forSpinDown: spindown, forZeroOffset: zeroOffset)
-                guard let actual = try? FECMessage.calibrationRequestForSpindown(
+                guard let actual = try? FECRequest.calibrationRequestForSpindown(
                     spindown: spindown,
                     zeroOffset: zeroOffset).message() else {
                         return XCTFail("Should not have thrown")
@@ -134,7 +134,7 @@ class BTLETrainerManagerTests: XCTestCase {
         let btle = BTLETrainerManager()
         for page in 0...50 {
             let expected = btle.generateRequestPage(page)
-            guard let actual = try? FECMessage.request(page: page).message() else {
+            guard let actual = try? FECRequest.request(page: page).message() else {
                 return XCTFail("Should NOT have thrown")
             }
 
