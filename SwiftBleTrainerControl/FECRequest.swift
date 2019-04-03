@@ -63,7 +63,7 @@ enum FECRequest {
         windspeed: Float,
         draftingFactor: Float
     ) throws -> Data {
-        let kgmRange: ClosedRange<Float> = 0...2.5
+        let kgmRange: ClosedRange<Float> = 0...1.86 // Was 2.5
         guard kgmRange.contains(kgmValue) else {
             throw FECError.outOfRange(kgmRange, kgmValue)
         }
@@ -86,7 +86,7 @@ enum FECRequest {
         guard gradeRange.contains(grade) else {
             throw FECError.outOfRange(gradeRange, grade)
         }
-        let coefficientRange: ClosedRange<Float> = 0...0.0033
+        let coefficientRange: ClosedRange<Float> = 0...0.0127 // was 0.0033
         guard coefficientRange.contains(coefficient) else {
             throw FECError.outOfRange(coefficientRange, coefficient)
         }
