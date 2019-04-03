@@ -58,12 +58,13 @@ enum TestData {
         return Data(packet + [packet.checksum])
     }
 
-    static func page2(temp: UInt8, speedCondition: UInt8, tempCondition: UInt8,
+    static func page2(temp: UInt8, speedCondition: CalibrationSpeedCondition,
+                      tempCondition: CalibrationTemperatureCondition,
                       targetSpeed: UInt16, targetSpindown: UInt16) -> Data {
 
         let status: UInt8 = (1 << 7) | (1 << 6)
-        let conditions: UInt8 = UInt8(speedCondition & 0x03) << 6
-            | UInt8(tempCondition & 0x03) << 4
+        let conditions: UInt8 = (speedCondition.rawValue & 0x03) << 6
+            | (tempCondition.rawValue & 0x03) << 4
 
         let (speedHi, speedLo) = targetSpeed.hiLo
         let (spinHi, spinLo) = targetSpindown.hiLo
@@ -287,8 +288,8 @@ class TrainerManagerTests: XCTestCase {
         let speed: UInt16 = 0x5555
         let temp: UInt8 = 60
 
-        let speedCondition: UInt8 = 0x01
-        let tempCondition: UInt8 = 0x02
+        let speedCondition: CalibrationSpeedCondition = .ok
+        let tempCondition: CalibrationTemperatureCondition = .ok
 
         let data = TestData.page2(temp: temp, speedCondition: speedCondition,
                                   tempCondition: tempCondition, targetSpeed: speed, targetSpindown: spindown)
@@ -298,8 +299,8 @@ class TrainerManagerTests: XCTestCase {
         let expectedTemp = Float(temp / 2 - 25)
         XCTAssertEqual(expectedTemp, btle.currentTemperatureDegC)
 
-        XCTAssertEqual(Int(speedCondition), btle.speedCondition)
-        XCTAssertEqual(Int(tempCondition), btle.temperatureCondition)
+        XCTAssertEqual(Int(speedCondition.rawValue), btle.speedCondition)
+        XCTAssertEqual(Int(tempCondition.rawValue), btle.temperatureCondition)
 
         let expectedKmh = Float(speed) * 3.6 / 1000
         XCTAssertEqual(expectedKmh, btle.targetSpeedKmH)
@@ -309,8 +310,8 @@ class TrainerManagerTests: XCTestCase {
 
         let response = FECResponse(from: data)
         let expectation = FECResponse.calibrationProgress(temp: temp,
-                                                          zeroOffsetStatus: 1,
-                                                          spindownStatus: 1,
+                                                          zeroOffsetStatus: .pending,
+                                                          spindownStatus: .pending,
                                                           speedCondition: speedCondition,
                                                           tempCondition: tempCondition,
                                                           targetSpeed: speed,

@@ -68,7 +68,7 @@ class BTLETrainerManagerTests: XCTestCase {
     func testWindResistanceCoefficientMatches() {
         let btle = BTLETrainerManager()
 
-        let resistances: [Float] = [0, 0.1, 1, 2, 2.5]
+        let resistances: [Float] = [0, 0.1, 1, 1.23, 1.86]
         let speeds: [Float] = [-50, -1, 0, 1, 50, 120]
         let factors: [Float] = [0, 0.1, 0.5, 0.99, 1]
 
