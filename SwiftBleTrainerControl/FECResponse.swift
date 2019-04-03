@@ -10,8 +10,9 @@ import Foundation
 
 enum FECResponse: Equatable {
     case calibrationResponse(temp: UInt8, zeroOffset: UInt16?, spindownResp: UInt16?)
-    case calibrationProgress(temp: UInt8, zeroOffsetStatus: UInt8, spindownStatus: UInt8, speedCondition: UInt8,
-        tempCondition: UInt8, targetSpeed: UInt16, targetSpindown: UInt16)
+    case calibrationProgress(temp: UInt8, zeroOffsetStatus: CalibrationStatus, spindownStatus: CalibrationStatus,
+        speedCondition: CalibrationSpeedCondition, tempCondition: CalibrationTemperatureCondition, targetSpeed: UInt16,
+        targetSpindown: UInt16)
     case generalFEData(capabilities: FECapabilities, type: EquipmentType, elapsed: UInt8, distance: UInt8,
         heartrate: UInt8, speed: Float)
     case generalSettings(cycleLength: UInt8, inclinePercentage: Float, resistanceLevel: UInt8)
@@ -101,18 +102,18 @@ enum FECResponse: Equatable {
     private static func calibrationProgress(_ payload: [UInt8]) -> FECResponse {
         let status = payload[1]
 
-        let zeroOffsetStatus = (status >> 7) & 0x1
-        let spindownStatus   = (status >> 6) & 0x1
+        let zeroOffsetStatus = CalibrationStatus(rawValue: (status >> 7) & 0x1)!
+        let spindownStatus   = CalibrationStatus(rawValue: (status >> 6) & 0x1)!
 
-        let speedCondition: UInt8 = (payload[2] >> 6) & 0x3
-        let tempCondition: UInt8 = (payload[2] >> 4) & 0x3
+        let speedCondition = CalibrationSpeedCondition(rawValue: (payload[2] >> 6) & 0x3)!
+        let tempCondition = CalibrationTemperatureCondition(rawValue: (payload[2] >> 4) & 0x3)!
 
-        let temp = payload[3]
+        let temperature = payload[3]
 
         let targetSpeed = UInt16(payload[4]) | (UInt16(payload[5]) << 8)
         let targetSpindown = UInt16(payload[6]) | (UInt16(payload[7]) << 8)
 
-        return .calibrationProgress(temp: temp, zeroOffsetStatus: zeroOffsetStatus,
+        return .calibrationProgress(temp: temperature, zeroOffsetStatus: zeroOffsetStatus,
                                     spindownStatus: spindownStatus, speedCondition: speedCondition,
                                     tempCondition: tempCondition, targetSpeed: targetSpeed,
                                     targetSpindown: targetSpindown)

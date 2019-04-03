@@ -28,6 +28,36 @@ extension UInt16 {
     }
 }
 
+// Calibration status
+enum CalibrationStatus: UInt8 {
+    case notRequested, pending
+}
+
+// Calibration conditions
+// swiftlint:disable identifier_name
+enum CalibrationTemperatureCondition: UInt8 {
+    case notApplicable,
+         tooCold,
+         ok,
+         tooHot
+}
+
+enum CalibrationSpeedCondition: UInt8 {
+    case notApplicable,
+         tooSlow,
+         ok,
+         reserved
+}
+// swiftlint:enable identifier_name
+
+////Calibration response
+//#define CALIBRATION_RESPONSE_FAILURE_NOT_ATTEMPTED 0
+//#define CALIBRATION_RESPONSE_SUCCESS 1
+enum CalibrationResponse {
+    case notAttempted,
+         success
+}
+
 enum FECError: Error {
     case message(String)
     case outOfRange(ClosedRange<Float>, Float)
