@@ -3,13 +3,14 @@
 import Foundation
 
 enum FECRequest {
+
+    case calibrationRequest(value: CalibrationRequest)
+
     case basicResistance(value: Float)
     case targetPower(value: Float)
     case windResistanceCoefficient(kgMValue: Float, windspeed: Float, draftingFactor: Float)
     case trackResistance(grade: Float, coefficient: Float)
-    case calibrationRequest(value: Int)
     case request(page: Int)
-    case calibrationRequestForSpindown(spindown: Bool, zeroOffset: Bool)
 
     func message() throws -> Data {
         return try messageBody().checksummed()
@@ -27,11 +28,9 @@ enum FECRequest {
         case .trackResistance(let grade, let coefficient):
             return try trackResistanceData(for: grade, coefficient: coefficient)
         case .calibrationRequest(let value):
-            return try calibrationRequestData(for: value)
+            return try calibrationRequest(for: value)
         case .request(let page):
             return try requestData(for: page)
-        case .calibrationRequestForSpindown(let spindown, let zeroOffset):
-            return calibrationRequestForSpindownData(for: spindown, zeroOffset: zeroOffset)
         }
     }
 
@@ -100,11 +99,12 @@ enum FECRequest {
         return Data([0xa4, 0x09, 0x4f, 0x05, page, 0xff, 0xff, 0xff, 0xff, gradeLsb, gradeMsb, rrCoeff])
     }
 
-    private func calibrationRequestData(for value: Int) throws -> Data {
+    // 7.4.1 Calibration request (p.40)
+    private func calibrationRequest(for calibration: CalibrationRequest) throws -> Data {
         let page: UInt8 = 1
-        // TODO: What's this about? It looks unfinished
-        //       (also, unused in original implementation?)
-        return Data([0xa4, 0x09, 0x4f, 0x05, page, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff])
+        return Data([0xa4, 0x09, 0x4f, 0x05,
+                     page, calibration.rawValue, 0x00, 0xff,
+                     0xff, 0xff, 0xff, 0xff])
     }
 
     private func requestData(for page: Int) throws -> Data {
@@ -115,17 +115,6 @@ enum FECRequest {
 
         let fePage: UInt8 = 70
         return Data([0xa4, 0x09, 0x4f, 0x05, fePage, 0xff, 0xff, 0xff, 0xff, 0x80, UInt8(page), 0x01])
-    }
-
-    private func calibrationRequestForSpindownData(for spindown: Bool, zeroOffset: Bool) -> Data {
-        let spindownFlag: UInt8 = (1<<7)
-        let zeroOffsetFlag: UInt8 = (1<<6)
-
-        let calibrationRequestMode: UInt8 = (spindown ? spindownFlag : 0)
-                                         | (zeroOffset ? zeroOffsetFlag : 0)
-
-        let page: UInt8 = 1
-        return Data([0xa4, 0x09, 0x4f, 0x05, page, calibrationRequestMode, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff])
     }
 }
 

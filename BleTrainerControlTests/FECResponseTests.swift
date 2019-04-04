@@ -41,7 +41,8 @@ enum CBUUIDs {
 }
 
 enum TestData {
-    static func page1(temp: UInt8, zeroOffset: UInt16? = nil, spindownResp: UInt16? = nil) -> Data {
+    // p.40 ANT+ Managed Network Document – Fitness Equipment Device Profile, Rev 4.2
+    static func calibrationRequestAndResponse(temp: UInt8, zeroOffset: UInt16? = nil, spindownResp: UInt16? = nil) -> Data {
         let features: UInt8 = (spindownResp != nil ? 1 : 0) << 7
                             | (zeroOffset   != nil ? 1 : 0) << 6
 
@@ -77,14 +78,20 @@ enum TestData {
     }
 
     // swiftlint:disable:next function_parameter_count
-    static func page16(capabilities: FECapabilities, type: EquipmentType, elapsed: UInt8,
-                       distance: UInt8, heartrate: UInt8, speed: UInt16) -> Data {
+    static func page16(capabilities: GeneralFECapabilities, type: EquipmentType, elapsed: Float,
+                       distance: UInt8, heartrate: UInt8, speed: UInt16,
+                       state: FEState, lapToggle: UInt8
+    ) -> Data {
 
         let (speedHi, speedLo) = speed.hiLo
 
+        let byte7 = capabilities.rawValue
+                  | (state.rawValue << 4)
+                  | ((lapToggle & 1) << 7)
+
         let packet: [UInt8] = [0xa4, 0x09, 0x00, 0x00,
-                               16, type.rawValue, elapsed, distance,
-                               speedLo, speedHi, heartrate, capabilities.rawValue]
+                               16, type.rawValue, UInt8(elapsed * 4), distance,
+                               speedLo, speedHi, heartrate, byte7]
 
         return Data(packet + [packet.checksum])
     }
@@ -100,15 +107,15 @@ enum TestData {
         return Data(packet + [packet.checksum])
     }
 
-    static func page25(updates: UInt8, cadence: UInt8, power: UInt16, instantaneous: UInt16) -> Data {
+    static func page25(updates: UInt8, cadence: UInt8, power: UInt16, instantaneous: UInt16, status: TrainerStatus, flags: TrainerFlags, state: FEState) -> Data {
         let (accumulatedHi, accumulatedLo) = power.hiLo
         let (instantHi, instantLo) = instantaneous.hiLo
 
-        // NOTE: The Obj-C implementation does some funky and possibly wrong stuff,
-        //       bit-twiddling (in string form!)
         let packet: [UInt8] = [0xa4, 0x09, 0x00, 0x00,
                                25, updates, cadence, accumulatedLo,
-                               accumulatedHi, instantLo, instantHi, 0]
+                               accumulatedHi, instantLo,
+                               (instantHi & 0xf) | (status.rawValue << 4),
+                               (flags.rawValue & 0xf) | (state.rawValue << 4)]
 
         return Data(packet + [packet.checksum])
     }
@@ -131,10 +138,15 @@ enum TestData {
         return Data(packet + [packet.checksum])
     }
 
-    static func page50(coefficient: UInt8, windSpeed: UInt8, factor: UInt8) -> Data {
+    static func page50(coefficient: Float, windSpeed kmh: Int8, factor: Float) -> Data {
+
+        let coeff = UInt8(coefficient * 100)
+        let speedValue = unsignedSpeedValue(from: kmh)
+        let drafting = UInt8(factor * 100)
+
         let packet: [UInt8] = [0xa4, 0x09, 0x00, 0x00,
                                50, 0, 0, 0,
-                               0, coefficient, windSpeed, factor]
+                               0, coeff, speedValue, drafting]
 
         return Data(packet + [packet.checksum])
     }
@@ -222,7 +234,7 @@ class TrainerManagerTests: XCTestCase {
         let temp: UInt8 = 60
         let zeroOffset: UInt16 = 0x0123
         let spindown: UInt16 = 0x1234
-        let data = TestData.page1(temp: temp, zeroOffset: zeroOffset, spindownResp: spindown)
+        let data = TestData.calibrationRequestAndResponse(temp: temp, zeroOffset: zeroOffset, spindownResp: spindown)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
@@ -237,7 +249,7 @@ class TrainerManagerTests: XCTestCase {
         let response = FECResponse(from: data)
 
         if case let .calibrationResponse(decodedTemp, decodedOffset, decodedSpindown)? = response {
-            XCTAssertEqual(temp, decodedTemp)
+            XCTAssertEqual(expectedTemp, decodedTemp)
             XCTAssertEqual(zeroOffset, decodedOffset)
             XCTAssertEqual(spindown, decodedSpindown)
         } else {
@@ -250,7 +262,7 @@ class TrainerManagerTests: XCTestCase {
 
         let temp: UInt8 = 60
         let zeroOffset: UInt16 = 0x0123
-        let data = TestData.page1(temp: temp, zeroOffset: zeroOffset)
+        let data = TestData.calibrationRequestAndResponse(temp: temp, zeroOffset: zeroOffset)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
@@ -268,7 +280,7 @@ class TrainerManagerTests: XCTestCase {
 
         let temp: UInt8 = 60
         let spindown: UInt16 = 0x5555
-        let data = TestData.page1(temp: temp, spindownResp: spindown)
+        let data = TestData.calibrationRequestAndResponse(temp: temp, spindownResp: spindown)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
@@ -303,53 +315,61 @@ class TrainerManagerTests: XCTestCase {
         XCTAssertEqual(Int(tempCondition.rawValue), btle.temperatureCondition)
 
         let expectedKmh = Float(speed) * 3.6 / 1000
+        let expectedMs = Float(speed) / 1000
         XCTAssertEqual(expectedKmh, btle.targetSpeedKmH)
 
         let expectedSpindownSeconds = Float(spindown) / 1000
         XCTAssertEqual(expectedSpindownSeconds, btle.targetSpinDownTimeSeconds)
 
         let response = FECResponse(from: data)
-        let expectation = FECResponse.calibrationProgress(temp: temp,
+        let expectation = FECResponse.calibrationProgress(temp: expectedTemp,
                                                           zeroOffsetStatus: .pending,
                                                           spindownStatus: .pending,
                                                           speedCondition: speedCondition,
                                                           tempCondition: tempCondition,
-                                                          targetSpeed: speed,
-                                                          targetSpindown: spindown)
+                                                          targetSpeedMs: expectedMs,
+                                                          targetSpindownms: spindown)
         XCTAssertEqual(expectation, response)
     }
 
     func testPage16() {
         let btle = BTLETrainerManager()
 
-        let capabilities: FECapabilities = [.distanceTravelled, .virtualSpeed, .hrDataSource]
+        let capabilities: GeneralFECapabilities = [.antPlusHrm, .virtualSpeed, .distanceTravelled]
         let type: EquipmentType = .trainer
-        let elapsed: UInt8 = 123
+        let elapsed: Float = 59
         let distance: UInt8 = 69
         let heartrate: UInt8 = 180
         let speed: UInt16 = 12345
+        let state = FEState.inUse
+        let toggle: UInt8 = 1
 
-        let expectedSpeed = Float(speed) * 3.6 / 1000
+        let expectedKmh = Float(speed) * 3.6 / 1000
+        let expectedMs = Float(speed) / 1000
 
         let data = TestData.page16(capabilities: capabilities, type: type, elapsed: elapsed,
-                                   distance: distance, heartrate: heartrate, speed: speed)
+                                   distance: distance, heartrate: heartrate, speed: speed,
+                                   state: state, lapToggle: toggle
+        )
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
         XCTAssertEqual(Int(type.rawValue), btle.equipmentType)
 
-        XCTAssertEqual(0.25 * Float(elapsed), btle.elapsedTimeSeconds)
+        XCTAssertEqual(elapsed, btle.elapsedTimeSeconds)
         XCTAssertEqual(Int(distance), btle.distanceTraveledMeters)
         XCTAssertEqual(Int(heartrate), btle.heartRateBPM)
-        XCTAssertEqual(expectedSpeed, btle.speedKmH)
+        XCTAssertEqual(expectedKmh, btle.speedKmH)
 
         let response = FECResponse(from: data)
         let expectation = FECResponse.generalFEData(capabilities: capabilities,
                                                     type: type,
                                                     elapsed: elapsed,
-                                                    distance: distance,
+                                                    distanceM: distance,
                                                     heartrate: heartrate,
-                                                    speed: expectedSpeed)
+                                                    speedMs: expectedMs,
+                                                    feState: state,
+                                                    lapToggle: toggle)
         XCTAssertEqual(expectation, response)
     }
 
@@ -384,8 +404,11 @@ class TrainerManagerTests: XCTestCase {
         let cadence: UInt8 = 111
         let power: UInt16 = 458
         let instantaneous: UInt16 = 999
+        let state = FEState.inUse
+        let flags = TrainerFlags.achievingPower
+        let status: TrainerStatus = []
 
-        let data = TestData.page25(updates: updates, cadence: cadence, power: power, instantaneous: instantaneous)
+        let data = TestData.page25(updates: updates, cadence: cadence, power: power, instantaneous: instantaneous, status: status, flags: flags, state: state)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
@@ -398,7 +421,10 @@ class TrainerManagerTests: XCTestCase {
         let expectation = FECResponse.trainerSpecific(updates: updates,
                                                       cadence: cadence,
                                                       accumulatedPower: power,
-                                                      instantaneousPower: instantaneous)
+                                                      instantaneousPower: instantaneous,
+                                                      status: status,
+                                                      flags: flags,
+                                                      state: state)
         XCTAssertEqual(expectation, response)
     }
 
@@ -444,17 +470,17 @@ class TrainerManagerTests: XCTestCase {
     func testPage50() {
         let btle = BTLETrainerManager()
 
-        let coefficient: UInt8 = 123
-        let windSpeed: UInt8 = 134
-        let factor: UInt8 = 99
+        let coefficient: Float = 0.51
+        let windSpeed: Int8 = 69
+        let factor: Float = 0.69
 
         let data = TestData.page50(coefficient: coefficient, windSpeed: windSpeed, factor: factor)
 
         btle.dataReceived(byCharacteristic: CBUUIDs.fecRead, data: data, error: nil)
 
-        XCTAssertEqual(Float(coefficient) * 0.01, btle.windResistanceCoefficientKgM)
-        XCTAssertEqual(Float(windSpeed) - 127, btle.windSpeedKmH)
-        XCTAssertEqual(Float(factor) / 100, btle.draftingFactor)
+        XCTAssertEqual(Float(coefficient), btle.windResistanceCoefficientKgM)
+        XCTAssertEqual(Float(windSpeed), btle.windSpeedKmH)
+        XCTAssertEqual(Float(factor), btle.draftingFactor)
 
         let response = FECResponse(from: data)
         let expectation = FECResponse.windResistance(coefficient: coefficient,

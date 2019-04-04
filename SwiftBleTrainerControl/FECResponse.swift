@@ -9,27 +9,87 @@
 import Foundation
 
 enum FECResponse: Equatable {
-    case calibrationResponse(temp: UInt8, zeroOffset: UInt16?, spindownResp: UInt16?)
-    case calibrationProgress(temp: UInt8, zeroOffsetStatus: CalibrationStatus, spindownStatus: CalibrationStatus,
-        speedCondition: CalibrationSpeedCondition, tempCondition: CalibrationTemperatureCondition, targetSpeed: UInt16,
-        targetSpindown: UInt16)
-    case generalFEData(capabilities: FECapabilities, type: EquipmentType, elapsed: UInt8, distance: UInt8,
-        heartrate: UInt8, speed: Float)
+
+    //
+    case calibrationResponse(temp: Float, zeroOffset: UInt16?, spindownMs: UInt16?)
+
+    //
+    case calibrationProgress(temp: Float,
+        zeroOffsetStatus: CalibrationStatus,
+        spindownStatus: CalibrationStatus,
+        speedCondition: CalibrationSpeedCondition,
+        tempCondition: CalibrationTemperatureCondition,
+        targetSpeedMs: Float,
+        targetSpindownms: UInt16)
+
+    //
+    case generalFEData(capabilities: GeneralFECapabilities,
+        type: EquipmentType,
+        elapsed: Float,
+        distanceM: UInt8,
+        heartrate: UInt8,
+        speedMs: Float,
+        feState: FEState,
+        lapToggle: UInt8
+    )
+
+    //
+    case generalMetabolicData(mets: Float, burnRate: Float, calories: UInt8,
+        capabilities: MetabolicCapabilities, state: FEState)
+
+    //
     case generalSettings(cycleLength: UInt8, inclinePercentage: Float, resistanceLevel: UInt8)
-    case trainerSpecific(updates: UInt8, cadence: UInt8, accumulatedPower: UInt16, instantaneousPower: UInt16)
+
+    //
+    case stationaryBikeSpecific(cadence: UInt8, power: UInt16, state: FEState)
+
+    //
+    case trainerSpecific(updates: UInt8,
+        cadence: UInt8,
+        accumulatedPower: UInt16,
+        instantaneousPower: UInt16,
+        status: TrainerStatus,
+        flags: TrainerFlags,
+        state: FEState
+    )
+
+    case trainerSpecificTorque(count: UInt8,
+        revolutions: UInt8,
+        period: Float,
+        torqueNm: Float,
+        state: FEState
+    )
+
+    //
     case basicResistance(resistance: Float)
+
+    //
     case targetPower(target: Float)
-    case windResistance(coefficient: UInt8, windspeed: UInt8, factor: UInt8)
+
+    //
+    case windResistance(coefficient: Float, windspeed: Int8, factor: Float)
+
+    //
     case trackResistance(coefficient: Float, grade: Float)
+
+    //
     case feCapabilities(maxResistance: UInt16, capabilities: FECapabilities)
+
+    //
     case userConfiguration(userWeightKg: Float, bicycleWeightKg: Float, diameterOffset: UInt8,
         wheelDiameterM: Float, ratio: Float)
-    case requestData
-    case commandStatus(commandId: UInt8, sequence: UInt8, status: UInt8, data: UInt32)
-    case manufacturersId(hardwareId: UInt8, manufacturer: UInt16, model: UInt16)
-    case productInformation(majorVersion: UInt8, minorVersion: UInt8, serial: UInt32)
 
-    case unknown
+    //
+    case requestData
+
+    //
+    case commandStatus(commandId: UInt8, sequence: UInt8, status: UInt8, data: UInt32)
+
+    //
+    case manufacturersId(hardwareId: UInt8, manufacturer: UInt16, model: UInt16)
+
+    //
+    case productInformation(majorVersion: UInt8, minorVersion: UInt8, serial: UInt32)
 
     // swiftlint:disable:next cyclomatic_complexity
     init?(from data: Data) {
@@ -57,6 +117,7 @@ enum FECResponse: Equatable {
         case 2: self = FECResponse.calibrationProgress(payload)
         case 16: self = FECResponse.generalFEData(payload)
         case 17: self = FECResponse.generalSettings(payload)
+        case 21: self = FECResponse.stationaryBikeSpecific(payload)
         case 25: self = FECResponse.trainerSpecific(payload)
         case 48: self = FECResponse.basicResistance(payload)
         case 49: self = FECResponse.targetPower(payload)
@@ -74,31 +135,23 @@ enum FECResponse: Equatable {
         }
     }
 
-    // page 1
+    // 7.4.1 Data Page 1 (0x01) – Calibration Request and Response Page (p.40)
     private static func calibrationResponse(_ payload: [UInt8]) -> FECResponse {
+        let features = CalibrationRequest(rawValue: payload[1])
+        let temperature = Float(payload[3] / 2) - 25
 
-        // swiftlint:disable:next nesting
-        struct Features: OptionSet {
-            let rawValue: UInt8
-
-            static let spindown = Features(rawValue: 1 << 7)
-            static let zeroOffset = Features(rawValue: 1 << 6)
-        }
-
-        let features = Features(rawValue: payload[1])
-        let temp = payload[3]
-        let zeroOffset: UInt16? = features.contains(.zeroOffset)
+        let zeroOffset: UInt16? = features.contains(.zeroOffsetCalibration)
             ? UInt16(payload[4]) | (UInt16(payload[5]) << 8)
             : nil
 
-        let spindown: UInt16? = features.contains(.spindown)
+        let spindown: UInt16? = features.contains(.spindownCalibration)
             ? UInt16(payload[6]) | (UInt16(payload[7]) << 8)
             : nil
 
-        return .calibrationResponse(temp: temp, zeroOffset: zeroOffset, spindownResp: spindown)
+        return .calibrationResponse(temp: temperature, zeroOffset: zeroOffset, spindownMs: spindown)
     }
 
-    // page 2
+    // 7.4.2 Data Page 2 (0x02) – Calibration in Progress (p.42)
     private static func calibrationProgress(_ payload: [UInt8]) -> FECResponse {
         let status = payload[1]
 
@@ -108,28 +161,58 @@ enum FECResponse: Equatable {
         let speedCondition = CalibrationSpeedCondition(rawValue: (payload[2] >> 6) & 0x3)!
         let tempCondition = CalibrationTemperatureCondition(rawValue: (payload[2] >> 4) & 0x3)!
 
-        let temperature = payload[3]
+        let temperature = Float(payload[3] / 2) - 25
 
-        let targetSpeed = UInt16(payload[4]) | (UInt16(payload[5]) << 8)
+        let targetSpeedMs = Float(UInt16(payload[4]) | (UInt16(payload[5]) << 8)) / 1000
         let targetSpindown = UInt16(payload[6]) | (UInt16(payload[7]) << 8)
 
-        return .calibrationProgress(temp: temperature, zeroOffsetStatus: zeroOffsetStatus,
-                                    spindownStatus: spindownStatus, speedCondition: speedCondition,
-                                    tempCondition: tempCondition, targetSpeed: targetSpeed,
-                                    targetSpindown: targetSpindown)
+        return .calibrationProgress(temp: temperature,
+                                    zeroOffsetStatus: zeroOffsetStatus,
+                                    spindownStatus: spindownStatus,
+                                    speedCondition: speedCondition,
+                                    tempCondition: tempCondition,
+                                    targetSpeedMs: targetSpeedMs,
+                                    targetSpindownms: targetSpindown)
     }
 
-    // page 16
+    // 7.5.2 Data Page 16 (0x10) – General FE Data (p.44)
     private static func generalFEData(_ payload: [UInt8]) -> FECResponse {
         let type = EquipmentType(rawValue: payload[1]) ?? .unknown
-        let elapsed = payload[2]
+        let elapsed = Float(payload[2]) / 4
         let distance = payload[3]
-        let speed = Float(UInt16(payload[4]) | (UInt16(payload[5]) << 8)) * 3.6 / 1000
+        let speed = Float(UInt16(payload[4]) | (UInt16(payload[5]) << 8)) / 1000
         let heartrate = payload[6]
-        let capabilities = FECapabilities(rawValue: payload[7])
+        let capabilities = GeneralFECapabilities(rawValue: payload[7] & 0xf)
 
-        return .generalFEData(capabilities: capabilities, type: type, elapsed: elapsed,
-                              distance: distance, heartrate: heartrate, speed: speed)
+        let feState = FEState(rawValue: (payload[7] >> 4) & 0x3)!
+        let lapToggle = (payload[7] >> 7) & 0x1
+
+        return .generalFEData(capabilities: capabilities,
+                              type: type,
+                              elapsed: elapsed,
+                              distanceM: distance,
+                              heartrate: heartrate,
+                              speedMs: speed,
+                              feState: feState,
+                              lapToggle: lapToggle
+        )
+    }
+
+
+
+    // 7.5.4 Data Page 18 (0x12) – General FE Metabolic Data (p.50)
+    private static func generalMetabolicData(_ payload: [UInt8]) -> FECResponse {
+        let mets = Float(UInt16(payload[2]) | (UInt16(payload[3]) << 8)) * 0.01
+        let burnRate = Float(UInt16(payload[4]) | (UInt16(payload[5]) << 8)) * 0.1
+        let calories = payload[6]
+        let capabilities = MetabolicCapabilities(rawValue: payload[7] & 3)
+        let state = FEState(rawValue: (payload[7] >> 4) & 0xf) ?? .reserved
+
+        return .generalMetabolicData(mets: mets,
+                                     burnRate: burnRate,
+                                     calories: calories,
+                                     capabilities: capabilities,
+                                     state: state)
     }
 
     // page 17
@@ -144,38 +227,72 @@ enum FECResponse: Equatable {
                                 resistanceLevel: resistance / 2)
     }
 
-    // page 25
+    // 7.6.3 Page 21 (0x15) – Specific Stationary Bike Data (p.55)
+    // NOTE: This is like a spin-class bike, *not* what a smart Turbo-trainer appears as.
+    private static func stationaryBikeSpecific(_ payload: [UInt8]) -> FECResponse {
+        let cadence = payload[4]
+        let power = UInt16(payload[5]) | (UInt16(payload[6]) << 8)
+        let state = FEState(rawValue: (payload[7] >> 4) & 0xf) ?? .reserved
+
+        return .stationaryBikeSpecific(cadence: cadence, power: power, state: state)
+    }
+
+    // 7.6.7 Page 25 (0x19) – Specific Trainer Data (p.60)
     private static func trainerSpecific(_ payload: [UInt8]) -> FECResponse {
         let updates = payload[1]
         let cadence = payload[2]
 
         let accumulatedPower = UInt16(payload[3]) | (UInt16(payload[4]) << 8)
-        let instantPower = UInt16(payload[5]) | (UInt16(payload[6]) << 8)
+        let instantPower = UInt16(payload[5]) | (UInt16(payload[6] & 0xf) << 8)
+        let status = TrainerStatus(rawValue: payload[6] >> 4)
+        let flags = TrainerFlags(rawValue: payload[7] & 0xf) ?? .undetermined
+        let state = FEState(rawValue: payload[7] >> 4) ?? .reserved
 
         return .trainerSpecific(updates: updates, cadence: cadence,
                                 accumulatedPower: accumulatedPower,
-                                instantaneousPower: instantPower)
+                                instantaneousPower: instantPower,
+                                status: status,
+                                flags: flags,
+                                state: state
+        )
     }
 
-    // page 48
+    // 7.6.8 Page 26 (0x1A) – Specific Trainer Torque Data (p.63)
+    private static func trainerSpecificTorque(_ payload: [UInt8]) -> FECResponse {
+        let count = payload[1]
+        let revolutions = payload[2]
+        let wheelPeriod = Float(UInt16(payload[3]) | (UInt16(payload[4]) << 8)) / 2048
+        let torqueNm = Float(UInt16(payload[5]) | (UInt16(payload[6]) << 8)) / 32
+
+        let state = FEState(rawValue: payload[7] >> 4) ?? .reserved
+
+        return .trainerSpecificTorque(count: count,
+                                        revolutions: revolutions,
+                                        period: wheelPeriod,
+                                        torqueNm: torqueNm,
+                                        state: state
+        )
+    }
+
+    // 7.8.1 Data Page 48 (0x30) – Basic Resistance (p.68)
     private static func basicResistance(_ payload: [UInt8]) -> FECResponse {
         let resistance = Float(payload[7]) / 2
 
         return .basicResistance(resistance: resistance)
     }
 
-    // page 49
+    // 7.8.2 Data Page 49 (0x31) – Target Power (p.69)
     private static func targetPower(_ payload: [UInt8]) -> FECResponse {
         let target = Float(UInt16(payload[6]) | (UInt16(payload[7]) << 8)) / 4
 
         return .targetPower(target: target)
     }
 
-    // page 50
+    // 7.8.3 Data Page 50 (0x32) – Wind Resistance (p.70)
     private static func windResistance(_ payload: [UInt8]) -> FECResponse {
-        let coefficient = payload[5]
-        let windspeed = payload[6]
-        let factor = payload[7]
+        let coefficient = Float(payload[5]) * 0.01
+        let windspeed = windSpeed(from: payload[6])
+        let factor = Float(payload[7]) * 0.01
 
         return .windResistance(coefficient: coefficient, windspeed: windspeed, factor: factor)
     }

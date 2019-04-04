@@ -111,25 +111,6 @@ class BTLETrainerManagerTests: XCTestCase {
         }
     }
 
-    func testCalibrationRequestForSpindownMatches() {
-        let btle = BTLETrainerManager()
-
-        for spindown in [true, false] {
-            for zeroOffset in [true, false] {
-                let expected = btle.generateCalibrationRequest(forSpinDown: spindown, forZeroOffset: zeroOffset)
-                guard let actual = try? FECRequest.calibrationRequestForSpindown(
-                    spindown: spindown,
-                    zeroOffset: zeroOffset).message() else {
-                        return XCTFail("Should not have thrown")
-                }
-
-                XCTAssertEqual(expected, actual,
-                               "Mismatched results for spindown \(spindown) and zeroOffset \(zeroOffset)")
-            }
-        }
-
-    }
-
     func testPageRequestMatches() {
         let btle = BTLETrainerManager()
         for page in 0...50 {
