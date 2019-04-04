@@ -434,9 +434,9 @@
                                 NSString *capabilitiesBinaryString = [utils getBinaryFromHexa:capabilitiesHexaString];
 
                                 //Binary string for each capability
-                                NSString *hrDataSourceBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(0, 2)];
-                                NSString *distanceTraveledEnabledBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(2, 1)];
-                                NSString *virtualSpeedFlagBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(3, 1)];
+                                NSString *hrDataSourceBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(6, 2)];
+                                NSString *distanceTraveledEnabledBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(5, 1)];
+                                NSString *virtualSpeedFlagBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(4, 1)];
                                 //NSString *feStateBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(4, 3)];
                                 //NSString *lapToggleBitBinaryString = [capabilitiesBinaryString substringWithRange:NSMakeRange(7, 1)];
                                 //Value for each capability
