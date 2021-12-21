@@ -41,7 +41,7 @@ class FECRequestTests: XCTestCase {
     @objc
     func testBasicResistanceProducesCorrectMessage() {
         let resistance: UInt8 = 50
-        let brMessage = try? FECRequest.basicResistance(value: Float(resistance)).message()
+        let brMessage = try? FECRequest.basicResistance(value: Double(resistance)).message()
         // Correct page
         XCTAssertEqual(brMessage?[4], 0x30)
         // Correct value
@@ -51,7 +51,7 @@ class FECRequestTests: XCTestCase {
     @objc
     func testTargetValueProducesCorrectMessage() {
         let target: UInt16 = 123
-        let msg = try? FECRequest.targetPower(value: Float(target)).message()
+        let msg = try? FECRequest.targetPower(value: Double(target)).message()
         // Correct page
         XCTAssertEqual(msg?[4], 0x31)
         // Correct value

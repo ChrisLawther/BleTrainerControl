@@ -1,4 +1,8 @@
 # BleTrainerControl
+
+## NOTE: This is a fork of something somebody at Tacx made
+It's been re-implemented in Swift, with tests to confirm the behaviour is the same both ways.
+
 ## What is BleTrainerControl
 This repo is a complete demo project to interact with Tacx trainers over Bluetooth Smart (Neo, Vortex Smart,...).
 The idea is to send and receive ANT payloads (FE-C profile) over a BLE tunnel.

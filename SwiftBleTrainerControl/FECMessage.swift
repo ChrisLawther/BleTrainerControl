@@ -15,7 +15,7 @@ extension Data {
     }
 
     var checksum: UInt8 {
-        return self.reduce(0) { $0 ^ $1 }
+        return self.reduce(0, ^)
     }
 }
 
@@ -67,8 +67,8 @@ enum CalibrationResponse {
 
 enum FECError: Error {
     case message(String)
-    case outOfRange(ClosedRange<Float>, Float)
-    case outOfIntegerRange(ClosedRange<Int>, Int)
+    case outOfRange(String, ClosedRange<Double>, Double)
+    case outOfIntegerRange(String, ClosedRange<Int>, Int)
 }
 
 extension FECError: LocalizedError {
@@ -76,10 +76,10 @@ extension FECError: LocalizedError {
         switch self {
         case .message(let msg):
             return msg
-        case .outOfIntegerRange(let range, let value):
-            return "Invalid value (\(value)) provided, must be \(range)"
-        case .outOfRange(let range, let value):
-            return "Invalid value (\(value)) provided, must be \(range)"
+        case .outOfIntegerRange(let variable, let range, let value):
+            return "Invalid '\(variable)' value (\(value)) provided, must be \(range)"
+        case .outOfRange(let variable, let range, let value):
+            return "Invalid '\(variable)' value (\(value)) provided, must be \(range)"
         }
     }
 }

@@ -2,14 +2,28 @@
 
 import Foundation
 
+private extension UInt16 {
+    /// Convert a grade % (-200...200) into it's UInt16 representation
+    var grade: Double {
+        return Double(self) * 0.01 - 200
+    }
+}
+
+private extension Double {
+    /// Convert the transmitted form of grade into a floating point value (-200...200)
+    var gradeValue: UInt16 {
+        return UInt16(100 * (self + 200))
+    }
+}
+
 enum FECRequest {
 
     case calibrationRequest(value: CalibrationRequest)
 
-    case basicResistance(value: Float)
-    case targetPower(value: Float)
-    case windResistanceCoefficient(kgMValue: Float, windspeed: Float, draftingFactor: Float)
-    case trackResistance(grade: Float, coefficient: Float)
+    case basicResistance(value: Double)
+    case targetPower(value: Double)
+    case windResistanceCoefficient(kgMValue: Double, windspeed: Double, draftingFactor: Double)
+    case trackResistance(grade: Double, coefficient: Double)
     case request(page: Int)
 
     func message() throws -> Data {
@@ -34,21 +48,21 @@ enum FECRequest {
         }
     }
 
-    private func basicResistanceData(for resistance: Float) throws -> Data {
-        let range: ClosedRange<Float> = 0...100
+    private func basicResistanceData(for resistance: Double) throws -> Data {
+        let range: ClosedRange<Double> = 0...100
 
         guard range.contains(resistance) else {
-            throw FECError.outOfRange(range, resistance)
+            throw FECError.outOfRange("resistance", range, resistance)
         }
 
         let page: UInt8 = 48
         return Data([0xa4, 0x09, 0x4f, 0x05, page, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, UInt8(2 * resistance)])
     }
 
-    private func targetPowerData(for power: Float) throws -> Data {
-        let range: ClosedRange<Float> = 0...10000
+    private func targetPowerData(for power: Double) throws -> Data {
+        let range: ClosedRange<Double> = 0...10000
         guard range.contains(power) else {
-            throw FECError.outOfRange(range, power)
+            throw FECError.outOfRange("power", range, power)
         }
 
         let page: UInt8 = 49
@@ -58,21 +72,24 @@ enum FECRequest {
     }
 
     private func windResistanceCoefficientData(
-        kgmValue: Float,
-        windspeed: Float,
-        draftingFactor: Float
+        kgmValue: Double,
+        windspeed: Double,
+        draftingFactor: Double
     ) throws -> Data {
-        let kgmRange: ClosedRange<Float> = 0...1.86 // Was 2.5
+        let kgmRange: ClosedRange<Double> = 0...1.86 // Was 2.5
         guard kgmRange.contains(kgmValue) else {
-            throw FECError.outOfRange(kgmRange, kgmValue)
-        }
-        let draftingRange: ClosedRange<Float> = 0...1
-        guard draftingRange.contains(draftingFactor) else {
-            throw FECError.outOfRange(draftingRange, draftingFactor)
+            throw FECError.outOfRange("kgm", kgmRange, kgmValue)
         }
 
-        // Q. Reject illegal windspeed, or just clamp it?
-        let windspeed = max(min(windspeed, 127), -127)
+        let draftingRange: ClosedRange<Double> = 0...1
+        guard draftingRange.contains(draftingFactor) else {
+            throw FECError.outOfRange("draftingFactor", draftingRange, draftingFactor)
+        }
+
+        let windspeedRange: ClosedRange<Double> = -200...200
+        guard windspeedRange.contains(windspeed) else {
+            throw FECError.outOfRange("windspeed", windspeedRange, windspeed)
+        }
         let coefficient = UInt8(kgmValue / 0.01)
         let speed = UInt8(windspeed + 127)
         let factor = UInt8(draftingFactor / 0.01)
@@ -80,21 +97,18 @@ enum FECRequest {
         return Data([0xa4, 0x09, 0x4f, 0x05, page, 0xff, 0xff, 0xff, 0xff, coefficient, speed, factor])
     }
 
-    private func trackResistanceData(for grade: Float, coefficient: Float) throws -> Data {
-        let gradeRange: ClosedRange<Float> = -200...200
+    private func trackResistanceData(for grade: Double, coefficient: Double) throws -> Data {
+        let gradeRange: ClosedRange<Double> = -200...200
         guard gradeRange.contains(grade) else {
-            throw FECError.outOfRange(gradeRange, grade)
+            throw FECError.outOfRange("grade", gradeRange, grade)
         }
-        let coefficientRange: ClosedRange<Float> = 0...0.0127 // was 0.0033
+        let coefficientRange: ClosedRange<Double> = 0...0.0127
         guard coefficientRange.contains(coefficient) else {
-            throw FECError.outOfRange(coefficientRange, coefficient)
+            throw FECError.outOfRange("coefficient", coefficientRange, coefficient)
         }
 
-        // TODO: Confirm valid range of gradient (200?)
-        // TODO: Confirm valid range of coefficient (0 .. 0.0033?)
-        let gradeValue = UInt16((grade + 200) / 0.01)        // TODO: Confirm this!!!!
         let rrCoeff = UInt8(coefficient / (5 * pow(10, -5)))  // TODO: Confirm this!!!!
-        let (gradeMsb, gradeLsb) = gradeValue.bytes()
+        let (gradeMsb, gradeLsb) = grade.gradeValue.bytes()
         let page: UInt8 = 51
         return Data([0xa4, 0x09, 0x4f, 0x05, page, 0xff, 0xff, 0xff, 0xff, gradeLsb, gradeMsb, rrCoeff])
     }
@@ -110,7 +124,7 @@ enum FECRequest {
     private func requestData(for page: Int) throws -> Data {
         let pageRange = 0...50
         guard pageRange.contains(page) else {
-            throw FECError.outOfIntegerRange(pageRange, page)
+            throw FECError.outOfIntegerRange("page", pageRange, page)
         }
 
         let fePage: UInt8 = 70
